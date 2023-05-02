@@ -1,0 +1,9 @@
+# Output folders
+obj
+lib
+bin
+
+# Dev folders
+.vscode
+.vs
+.cut

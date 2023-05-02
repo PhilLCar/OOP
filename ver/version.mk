@@ -1,0 +1,4 @@
+MAJOR    = 0
+MINOR    = 0
+REVISION = 0
+BUILD    = 0
