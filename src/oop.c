@@ -4,7 +4,7 @@ void *_virtual(size_t size, const char *name)
 {
   void *mem = malloc(size + sizeof(const char*));
 
-  *(char**)(mem + size) = name;
+  *(char**)(mem + size) = (char*)name;
 
   return mem;
 }
@@ -20,4 +20,5 @@ void *_v_call(const char *name, void *typename, void *params)
 
   }
   
+  return NULL;
 }
