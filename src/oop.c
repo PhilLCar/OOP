@@ -2,9 +2,9 @@
 
 void *_valloc(size_t size, const char *name)
 {
-  void *mem = malloc(size + sizeof(const char*));
+  char *mem = malloc(size + sizeof(const char*));
 
-  *(char**)(mem + size) = (char*)name;
+  *(const char**)(mem + size) = name;
 
   return mem;
 }

@@ -7,7 +7,8 @@
 #include <string.h>
 
 // CUT
-#include <macro.h>
+#include "macro.h"
+#include <diagnostic.h>
 
 // The _TYPENAME structure is the data structure
 // The  TYPENAME typedef is the virtual class (including the pointer to virtual methods)
@@ -43,7 +44,7 @@ struct EXPAND2(_, TYPENAME) {
 #define NEW(TYPENAME) TYPENAME ## _cons((TYPENAME*)_valloc(sizeof(TYPENAME), STRINGIZE(TYPENAME)) __NEW_CONT__
 #define __NEW_CONT__(...) __VA_OPT__(,)__VA_ARGS__)
 
-#define VCALL(THIS, VAR) _virtual(#VAR, (char*)THIS + sizeof(*THIS))
+#define VCALL(THIS, VAR) _virtual(#VAR, *(char**)((char*)THIS + sizeof(*THIS)))
 
 #define DELETE(VAR) \
 if (VAR) { \

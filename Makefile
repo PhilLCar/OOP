@@ -10,10 +10,10 @@ include ver/version.mk
 PROJECT_ROOTS =
 
 # Additionnal libraries (ex: -pthread, -lmath, etc)
-ADD_LIBRARIES = 
+LIBRARIES = 
 
 # Additionnal flags for the compiler
-ADD_CFLAGS = 
+FLAGS = -DMEMORY_WATCH
 
 # Include the template
 include $(CUT_HOME)CUT/res/library.mk
