@@ -25,8 +25,8 @@ typedef struct _virtual_entry {
 typedef struct _type {
   const char         *name;
   const size_t        size;
-  const Constructor   cons;
-  const Destructor    free;
+  const Constructor   new;
+  const Destructor    delete;
   const VirtualEntry *ve_start;
   const VirtualEntry *ve_stop;
 } Type;

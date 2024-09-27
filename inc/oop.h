@@ -25,21 +25,21 @@ struct EXPAND2(_, TYPENAME) {
 // (the brackets are hidden in the macros)
 #define END(...) }; \
 static void *_(default)() { \
-  return EXPAND2(TYPENAME, _cons)(_this __VA_OPT__(,) __VA_ARGS__); \
+  return EXPAND2(TYPENAME, _cons)(this __VA_OPT__(,) __VA_ARGS__); \
 } \
-static VirtualEntry _ve_init_ __attribute__((used, section(STRINGIZE(EXPAND2(virtual_, TYPENAME))))) = { .method = "" }; \
+static VirtualEntry EXPAND2(_ve_, TYPENAME) __attribute__((used, section(STRINGIZE(EXPAND2(virtual_, TYPENAME))))) = { .method = "" }; \
 extern VirtualEntry EXPAND2(__start_virtual_, TYPENAME), EXPAND2(__stop_virtual_, TYPENAME); \
 __attribute__((unused)) static Type EXPAND2(_typeof_, TYPENAME) = { \
   .name     = STRINGIZE(TYPENAME), \
   .size     = sizeof(EXPAND(TYPENAME)), \
-  .cons     = (void*)EXPAND2(TYPENAME, _default), \
-  .free     = (void*)EXPAND2(TYPENAME, _free), \
+  .new      = (void*)EXPAND2(TYPENAME, _default), \
+  .delete   = (void*)EXPAND2(TYPENAME, _free), \
   .ve_start = &EXPAND2(__start_virtual_, TYPENAME) + 1, \
   .ve_stop  = &EXPAND2(__stop_virtual_, TYPENAME) \
 }
 
 // Underscore to imply member method
-#define _(METHOD_NAME) EXPAND3(TYPENAME, _, METHOD_NAME)(EXPAND(TYPENAME) *_this __CONT__
+#define _(METHOD_NAME) EXPAND3(TYPENAME, _, METHOD_NAME)(EXPAND(TYPENAME) *this __CONT__
 #define __CONT__(...) __VA_OPT__(,)__VA_ARGS__)
 
 // Replace underscore with static for static method
@@ -69,12 +69,12 @@ __attribute__((unused)) static Type EXPAND2(_typeof_, TYPENAME) = { \
 
 #define DELETE(OBJECT) \
 if (OBJECT) { \
-  CALL(OBJECT, free)(); \
+  gettype(OBJECT)->delete(OBJECT); \
   tfree(OBJECT); \
   OBJECT = NULL; \
 }
 
-#define BASE_0 &_this->base
+#define BASE_0 &this->base
 #define BASE_1 BASE_0.base
 #define BASE_2 BASE_1.base
 #define BASE_3 BASE_2.base
