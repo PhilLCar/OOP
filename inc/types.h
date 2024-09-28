@@ -36,7 +36,7 @@ VirtualFunction virtual(const Type *type, const char *name);
 
 
 // Typed malloc
-void       *talloc(Type *type);
+void       *talloc(const Type *type);
 
 // Typed free
 void        tfree(void *object);
@@ -48,6 +48,9 @@ const Type *gettype(const void *object);
 const char *typename(void *object);
 
 // True if the type represents an object
-int         isobject(Type *type);
+int         isobject(const Type *type);
+
+// Compares the two types
+int         sametype(const Type *a, const Type *b);
 
 #endif

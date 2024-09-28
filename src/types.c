@@ -1,9 +1,22 @@
 #include <types.h>
 
-// Type instead of type id
+////////////////////////////////////////////////////////////////////////////////
+VirtualFunction virtual(const Type *type, const char *method)
+{
+  if (type && method)
+  {
+    for (const VirtualEntry *ve = type->ve_start; ve != type->ve_stop; ve++) {
+      if (strcmp(ve->method, method)) continue;
+
+      return ve->fptr;
+    }
+  }
+  
+  return NULL;
+}
 
 ////////////////////////////////////////////////////////////////////////////////
-void *talloc(Type *type)
+void *talloc(const Type *type)
 {
   const Type **mem = malloc(sizeof(const Type*) + type->size);
                
@@ -31,22 +44,13 @@ const char *typename(void *object)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int isobject(Type *type)
+int isobject(const Type *type)
 {
   return type->delete != NULL;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-VirtualFunction virtual(const Type *type, const char *method)
+int sametype(const Type *a, const Type *b)
 {
-  if (type && method)
-  {
-    for (const VirtualEntry *ve = type->ve_start; ve != type->ve_stop; ve++) {
-      if (strcmp(ve->method, method)) continue;
-
-      return ve->fptr;
-    }
-  }
-  
-  return NULL;
+  return !strcmp(a->name, b->name);
 }
