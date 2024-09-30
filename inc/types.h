@@ -8,7 +8,7 @@
 #include <diagnostic.h>
 
 #define NATIVE_TYPE(NATIVE) (Type){ .name = #NATIVE, .size = sizeof(NATIVE) }
-#define OBJECT_TYPE(OBJECT) _typeof_#OBJECT
+#define OBJECT_TYPE(OBJECT) _typeof_##OBJECT
 
 typedef void  (*VirtualFunction)(void*, ...);
 

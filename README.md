@@ -26,7 +26,7 @@ Definition:
 -----------
 The macros provided aim to make the definition of objects as simple as possible:
 
-####C++
+#### C++
 ```C++
 class Object : Base {
   type member1;
@@ -44,7 +44,7 @@ class Object : Base {
 };
 ```
 
-####C
+#### C
 ```C
 #define TYPENAME Object
 OBJECT(params...) INHERIT (Base)
@@ -74,14 +74,14 @@ Calling constructiors and destructiors:
 The methods 'cons' and 'free' work by building an object from an existing memory location, for
 instance:
 
-####C++
+#### C++
 ```C++
 {
   Object object = Object(params...);
 }
 ```
 
-####C
+#### C
 ```C
 {
   Object object;
@@ -96,7 +96,7 @@ and so the programmer has the responsability to call it themselves.
 
 For memory allocation the usage is even closer in syntax:
 
-####C++
+#### C++
 ```C++
 {
   Object *object = new Object(params...);
@@ -105,7 +105,7 @@ For memory allocation the usage is even closer in syntax:
 }
 ```
 
-####C
+#### C
 ```C
 {
   Object *object = NEW (Object) (params...)
