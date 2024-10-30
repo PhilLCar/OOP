@@ -14,8 +14,8 @@
 // The object declaration macro
 #define OBJECT(...) \
 typedef struct EXPAND2(_, TYPENAME) EXPAND(TYPENAME); \
-EXPAND(TYPENAME) *_(cons)(__VA_ARGS__); \
-void _(free)(); \
+EXPAND(TYPENAME) *_(Construct)(__VA_ARGS__); \
+void _(Destruct)(); \
 struct EXPAND2(_, TYPENAME) {
 
 // Inherit from an object
@@ -24,23 +24,27 @@ struct EXPAND2(_, TYPENAME) {
 // This is to standardize inheriting and non-inheriting objects' definitions
 // (the brackets are hidden in the macros)
 #define END(...) }; \
-static void *_(default)() { \
-  return EXPAND2(TYPENAME, _cons)(this __VA_OPT__(,) __VA_ARGS__); \
+static void *_(Default)() { \
+  return EXPAND2(TYPENAME, _Construct)(this __VA_OPT__(,) __VA_ARGS__); \
 } \
 static VirtualEntry EXPAND2(_ve_, TYPENAME) __attribute__((used, section(STRINGIZE(EXPAND2(virtual_, TYPENAME))))) = { .method = "" }; \
 extern VirtualEntry EXPAND2(__start_virtual_, TYPENAME), EXPAND2(__stop_virtual_, TYPENAME); \
 __attribute__((unused)) static Type EXPAND2(_typeof_, TYPENAME) = { \
-  .name     = STRINGIZE(TYPENAME), \
-  .size     = sizeof(EXPAND(TYPENAME)), \
-  .new      = (void*)EXPAND2(TYPENAME, _default), \
-  .delete   = (void*)EXPAND2(TYPENAME, _free), \
-  .ve_start = &EXPAND2(__start_virtual_, TYPENAME) + 1, \
-  .ve_stop  = &EXPAND2(__stop_virtual_, TYPENAME) \
+  .name      = STRINGIZE(TYPENAME), \
+  .size      = sizeof(EXPAND(TYPENAME)), \
+  .construct = (void*)EXPAND2(TYPENAME, _Default), \
+  .destruct  = (void*)EXPAND2(TYPENAME, _Destruct), \
+  .ve_start  = &EXPAND2(__start_virtual_, TYPENAME) + 1, \
+  .ve_stop   = &EXPAND2(__stop_virtual_, TYPENAME) \
 }
 
 // Underscore to imply member method
 #define _(METHOD_NAME) EXPAND3(TYPENAME, _, METHOD_NAME)(EXPAND(TYPENAME) *this __CONT__
 #define __CONT__(...) __VA_OPT__(,)__VA_ARGS__)
+
+// Underscore to imply member method
+#define CONST(METHOD_NAME) EXPAND3(TYPENAME, _, METHOD_NAME)(const EXPAND(TYPENAME) *this __CONST_CONT__
+#define __CONST_CONT__(...) __VA_OPT__(,)__VA_ARGS__)
 
 // Replace underscore with static for static method
 #define STATIC(FUNCTION_NAME) EXPAND3(TYPENAME, _, FUNCTION_NAME)
@@ -60,7 +64,7 @@ __attribute__((unused)) static Type EXPAND2(_typeof_, TYPENAME) = { \
 }
 
 // Creates a new instance of the object
-#define NEW(TYPENAME) TYPENAME ## _cons((TYPENAME*)talloc(&EXPAND2(_typeof_, TYPENAME)) __NEW_CONT__
+#define NEW(TYPENAME) TYPENAME ## _Construct((TYPENAME*)talloc(&EXPAND2(_typeof_, TYPENAME)) __NEW_CONT__
 #define __NEW_CONT__(...) __VA_OPT__(,)__VA_ARGS__)
  
 // Call a virtual method on the object
@@ -69,7 +73,7 @@ __attribute__((unused)) static Type EXPAND2(_typeof_, TYPENAME) = { \
 
 #define DELETE(OBJECT) \
 if (OBJECT) { \
-  gettype(OBJECT)->delete(OBJECT); \
+  gettype(OBJECT)->destruct(OBJECT); \
   tfree(OBJECT); \
   OBJECT = NULL; \
 }
@@ -85,5 +89,14 @@ if (OBJECT) { \
 #define BASE_8 BASE_7.base
 #define BASE_9 BASE_8.base
 #define BASE(N) (EXPAND2(BASE_, N))
+
+#define TYPENAME Object
+
+OBJECT (void *object) INHERIT (void*)
+END (NULL);
+
+void *CONST (Get)();
+
+#undef TYPENAME
 
 #endif

@@ -9,6 +9,15 @@
 
 #define NATIVE_TYPE(NATIVE) (Type){ .name = #NATIVE, .size = sizeof(NATIVE) }
 #define OBJECT_TYPE(OBJECT) _typeof_##OBJECT
+#define OBJECTIFY(NATIVE) \
+static void *NATIVE##_Construct(void *mem) { return mem; } \
+static void  NATIVE##_Destruct(void *mem) {} \
+static Type _typeof_##NATIVE =  { \
+  .name      = #NATIVE, \
+  .size      = sizeof(NATIVE), \
+  .construct = NATIVE##_Construct, \
+  .destruct  = NATIVE##_Destruct \
+}
 
 typedef void  (*VirtualFunction)(void*, ...);
 
@@ -25,8 +34,8 @@ typedef struct _virtual_entry {
 typedef struct _type {
   const char         *name;
   const size_t        size;
-  const Constructor   new;
-  const Destructor    delete;
+  const Constructor   construct;
+  const Destructor    destruct;
   const VirtualEntry *ve_start;
   const VirtualEntry *ve_stop;
 } Type;
@@ -45,7 +54,7 @@ void        tfree(void *object);
 const Type *gettype(const void *object);
 
 // Gets the typename of an object
-const char *typename(void *object);
+const char *typename(const void *object);
 
 // True if the type represents an object
 int         isobject(const Type *type);
