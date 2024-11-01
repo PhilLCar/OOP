@@ -37,7 +37,7 @@ void _ex_default_handler(int signal)
     fprintf(stderr, "%s(%ld): ", exception.filename, exception.code);
   }
 
-  fprintf(stderr, "%s\n", exception.message);
+  fprintf(stderr, "%s\n", exception.base);
   exit(exception.code);
 }
 
@@ -86,10 +86,10 @@ void throw(Exception *exception)
 
 #define TYPENAME Exception
 
-Exception *_(Construct)(const char *message, long code) {
+Exception *_(Construct)(const char *message) {
   if (this) {
-    this->message = message;
-    this->code    = code;
+    this->base = message;
+    this->code = 0;
   }
 
   return this;
@@ -102,7 +102,7 @@ void _(Destruct)() { }
 
 SegmentationFaultException *_(Construct)()
 {
-  Exception_Construct(BASE(0), "Segmentation fault!", (long)&OBJECT_TYPE(SegmentationFaultException));
+  Exception_Construct(BASE(0), "Segmentation fault!");
 
   return this;
 }
@@ -114,7 +114,7 @@ void _(Destruct)() { }
 
 ArithmeticException *_(Construct)()
 {
-  Exception_Construct(BASE(0), "Segmentation fault!", (long)&OBJECT_TYPE(ArithmeticException));
+  Exception_Construct(BASE(0), "Segmentation fault!");
 
   return this;
 }
@@ -126,7 +126,7 @@ void _(Destruct)() { }
 
 MemoryAllocationException *_(Construct)()
 {
-  Exception_Construct(BASE(0), "Memory allocation failed!", (long)&OBJECT_TYPE(MemoryAllocationException));
+  Exception_Construct(BASE(0), "Memory allocation failed!");
 
   return this;
 }

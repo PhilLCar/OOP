@@ -4,7 +4,7 @@ int sketchy(void *env)
 {
   printf("Entered sketchy function\n");
 
-  THROW(NEW (Exception) ("Test exception!", 10));
+  THROW(NEW (Exception) ("Test exception!"));
 
   printf("Exited sketchy function\n");
 
@@ -13,7 +13,7 @@ int sketchy(void *env)
 
 int sketchy2(void *env)
 {
-  printf("Entered sketchy function\n");
+  printf("Entered sketchy function 2\n");
 
   void *a = *(void**)NULL;
 
@@ -31,7 +31,7 @@ int main(void)
   } CATCH (SegmentationFaultException) {
     printf("Caught seg fault exception\n");
   } CATCH (Exception) {
-    printf("Caught exception: %s\n", _exception->message);
+    printf("Caught exception: %s\n", _exception->base);
   } FINALLY {
     printf("Always_executes when throw\n");
   } END_TRY;

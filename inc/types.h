@@ -32,12 +32,13 @@ typedef struct _virtual_entry {
 } VirtualEntry;
 
 typedef struct _type {
-  const char         *name;
-  const size_t        size;
-  const Constructor   construct;
-  const Destructor    destruct;
-  const VirtualEntry *ve_start;
-  const VirtualEntry *ve_stop;
+  const char          *name;
+  const size_t         size;
+  const struct _type **base;
+  const Constructor    construct;
+  const Destructor     destruct;
+  const VirtualEntry  *ve_start;
+  const VirtualEntry  *ve_stop;
 } Type;
 
 // A cast to allow for arbitrary use of parameters
@@ -61,5 +62,8 @@ int         isobject(const Type *type);
 
 // Compares the two types
 int         sametype(const Type *a, const Type *b);
+
+// Search the inheritance tree for the type
+int         castable(const Type *base, const Type *derived);
 
 #endif

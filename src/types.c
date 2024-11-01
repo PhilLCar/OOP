@@ -54,3 +54,12 @@ int sametype(const Type *a, const Type *b)
 {
   return !strcmp(a->name, b->name);
 }
+
+////////////////////////////////////////////////////////////////////////////////
+int castable(const Type *base, const Type *derived)
+{
+  if (!derived)                return 0;
+  if (sametype(base, derived)) return 1;
+
+  return castable(base, *derived->base);
+}
