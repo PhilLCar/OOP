@@ -79,6 +79,8 @@ void _ex_teardown()
 
 void throw(Exception *exception)
 {
+  _ex_setup();
+
   _exception = exception;
 
   raise(SIGUSR1);
