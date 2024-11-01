@@ -88,14 +88,22 @@ void throw(Exception *exception)
 
 Exception *_(Construct)(const char *message) {
   if (this) {
-    this->base = message;
-    this->code = 0;
+    this->base = malloc(strlen(message) + 1);
+    
+    if (this->base) {
+      strcpy(this->base, message);
+    }
   }
 
   return this;
 }
 
-void _(Destruct)() { }
+void _(Destruct)()
+{ 
+  if (this) {
+    free(this->base);
+  }
+}
 
 #undef TYPENAME
 #define TYPENAME SegmentationFaultException
@@ -105,7 +113,10 @@ SegmentationFaultException *_(Construct)()
   return (SegmentationFaultException*)Exception_Construct(BASE(0), "Segmentation fault!");
 }
 
-void _(Destruct)() { }
+void _(Destruct)()
+{ 
+  Exception_Destruct(BASE(0));
+}
 
 #undef TYPENAME
 #define TYPENAME ArithmeticException
@@ -115,7 +126,10 @@ ArithmeticException *_(Construct)()
   return (ArithmeticException*)Exception_Construct(BASE(0), "Segmentation fault!");
 }
 
-void _(Destruct)() { }
+void _(Destruct)()
+{ 
+  Exception_Destruct(BASE(0));
+}
 
 #undef TYPENAME
 #define TYPENAME MemoryAllocationException
@@ -125,6 +139,9 @@ MemoryAllocationException *_(Construct)()
   return (MemoryAllocationException*)Exception_Construct(BASE(0), "Memory allocation failed!");
 }
 
-void _(Destruct)() { }
+void _(Destruct)()
+{ 
+  Exception_Destruct(BASE(0));
+}
 
 #undef TYPENAME

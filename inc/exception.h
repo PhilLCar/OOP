@@ -21,7 +21,7 @@
 
 #define THROW(EXCEPTION) _exception = (Exception*)EXCEPTION; _exception->filename = __FILE__; _exception->line = __LINE__; throw(_exception)
 
-OBJECT (const char *message) BASED (const char*)
+OBJECT (const char *message) BASED (char*)
   const char *filename;
   int         line;
   long        code;
