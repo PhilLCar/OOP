@@ -23,7 +23,7 @@ struct EXPAND2(_, TYPENAME) {
 
 // This is to standardize inheriting and non-inheriting objects' definitions
 // (the brackets are hidden in the macros)
-#define END(...) }; \
+#define END_OBJECT(...) }; \
 static void *_(Default)() { \
   return EXPAND2(TYPENAME, _Construct)(this __VA_OPT__(,) __VA_ARGS__); \
 } \
@@ -93,7 +93,7 @@ if (OBJECT) { \
 #define TYPENAME Object
 
 OBJECT (void *object) INHERIT (void*)
-END (NULL);
+END_OBJECT (NULL);
 
 void *CONST (Get)();
 
