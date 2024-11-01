@@ -59,12 +59,16 @@ void _ex_setup()
   _handler_set = 1;
 }
 
-void _ex_teardown()
+void _ex_default()
 {
   signal(SIGUSR1, _ex_default_handler);
   signal(SIGSEGV, _ex_default_handler);
   signal(SIGFPE,  _ex_default_handler);
+}
 
+void _ex_teardown()
+{
+  _ex_default();
   _handler_set = 0;
 
   if (_ex_caught) {
@@ -79,7 +83,9 @@ void _ex_teardown()
 
 void throw(Exception *exception)
 {
-  _ex_setup();
+  if (!_handler_set) {
+    _ex_default();
+  }
 
   _exception = exception;
 
