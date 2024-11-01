@@ -24,21 +24,22 @@ void _ex_set_exception(int signal)
 
 void _ex_default_handler(int signal)
 {
-  Exception exception;
+  int code;
 
   _ex_set_exception(signal);
 
-  exception = *_exception;
+  code = _exception->code;
+
+  if (_exception->filename)
+  {
+    fprintf(stderr, "%s(%d): ", _exception->filename, _exception->line);
+  }
+
+  fprintf(stderr, "%s\n", _exception->base);
 
   DELETE(_exception);
 
-  if (exception.filename)
-  {
-    fprintf(stderr, "%s(%ld): ", exception.filename, exception.code);
-  }
-
-  fprintf(stderr, "%s\n", exception.base);
-  exit(exception.code);
+  exit(code);
 }
 
 void _ex_trycatch_handler(int signal)
