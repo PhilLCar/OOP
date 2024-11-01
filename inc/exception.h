@@ -9,6 +9,7 @@
 #include <setjmp.h>
 
 // CUT
+#include <diagnostic.h>
 #include <oop.h>
 
 #define TYPENAME Exception
@@ -19,7 +20,7 @@
 #define FINALLY if (_exception)
 #define END_TRY _ex_teardown();
 
-#define THROW(EXCEPTION) _exception = EXCEPTION; _exception->filename = __FILE__; _exception->line = __LINE__; throw(_exception)
+#define THROW(EXCEPTION) _exception = (Exception*)EXCEPTION; _exception->filename = __FILE__; _exception->line = __LINE__; throw(_exception)
 
 OBJECT (const char *message, long code)
   const char *message;
@@ -39,12 +40,17 @@ void _ex_teardown();
 void throw(Exception *exception);
 
 #undef TYPENAME
-#define TYPENAME SegFaultException
+#define TYPENAME SegmentationFaultException
 OBJECT () INHERIT (Exception)
 
 END_OBJECT();
 #undef TYPENAME
 #define TYPENAME ArithmeticException
+OBJECT () INHERIT (Exception)
+
+END_OBJECT();
+#undef TYPENAME
+#define TYPENAME MemoryAllocationException
 OBJECT () INHERIT (Exception)
 
 END_OBJECT();

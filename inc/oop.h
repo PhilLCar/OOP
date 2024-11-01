@@ -7,9 +7,9 @@
 #include <string.h>
 
 // CUT
+#include <diagnostic.h>
 #include "macro.h"
 #include <types.h>
-#include <diagnostic.h>
 
 // The object declaration macro
 #define OBJECT(...) \
@@ -89,14 +89,5 @@ if (OBJECT) { \
 #define BASE_8 BASE_7.base
 #define BASE_9 BASE_8.base
 #define BASE(N) (EXPAND2(BASE_, N))
-
-#define TYPENAME Object
-
-OBJECT (void *object) INHERIT (void*)
-END_OBJECT (NULL);
-
-void *CONST (Get)();
-
-#undef TYPENAME
 
 #endif

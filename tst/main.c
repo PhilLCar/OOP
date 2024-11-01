@@ -28,7 +28,7 @@ int main(void)
 
   TRY {
     sketchy(NULL);
-  } CATCH (SegFaultException) {
+  } CATCH (SegmentationFaultException) {
     printf("Caught seg fault exception\n");
   } CATCH (Exception) {
     printf("Caught exception: %s\n", _exception->message);

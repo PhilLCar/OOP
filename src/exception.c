@@ -13,7 +13,7 @@ void _ex_set_exception(int signal)
     switch (signal)
     {
     case SIGSEGV:
-      _exception = (Exception*) NEW (SegFaultException) ();
+      _exception = (Exception*) NEW (SegmentationFaultException) ();
       break;
     case SIGFPE:
       _exception = (Exception*) NEW (ArithmeticException) ();
@@ -98,11 +98,11 @@ Exception *_(Construct)(const char *message, long code) {
 void _(Destruct)() { }
 
 #undef TYPENAME
-#define TYPENAME SegFaultException
+#define TYPENAME SegmentationFaultException
 
-SegFaultException *_(Construct)()
+SegmentationFaultException *_(Construct)()
 {
-  Exception_Construct(BASE(0), "Segmentation fault!", (long)&OBJECT_TYPE(SegFaultException));
+  Exception_Construct(BASE(0), "Segmentation fault!", (long)&OBJECT_TYPE(SegmentationFaultException));
 
   return this;
 }
@@ -120,3 +120,17 @@ ArithmeticException *_(Construct)()
 }
 
 void _(Destruct)() { }
+
+#undef TYPENAME
+#define TYPENAME MemoryAllocationException
+
+MemoryAllocationException *_(Construct)()
+{
+  Exception_Construct(BASE(0), "Memory allocation failed!", (long)&OBJECT_TYPE(MemoryAllocationException));
+
+  return this;
+}
+
+void _(Destruct)() { }
+
+#undef TYPENAME
