@@ -102,9 +102,7 @@ void _(Destruct)() { }
 
 SegmentationFaultException *_(Construct)()
 {
-  Exception_Construct(BASE(0), "Segmentation fault!");
-
-  return this;
+  return (SegmentationFaultException*)Exception_Construct(BASE(0), "Segmentation fault!");
 }
 
 void _(Destruct)() { }
@@ -114,9 +112,7 @@ void _(Destruct)() { }
 
 ArithmeticException *_(Construct)()
 {
-  Exception_Construct(BASE(0), "Segmentation fault!");
-
-  return this;
+  return (ArithmeticException*)Exception_Construct(BASE(0), "Segmentation fault!");
 }
 
 void _(Destruct)() { }
@@ -126,9 +122,7 @@ void _(Destruct)() { }
 
 MemoryAllocationException *_(Construct)()
 {
-  Exception_Construct(BASE(0), "Memory allocation failed!");
-
-  return this;
+  return (MemoryAllocationException*)Exception_Construct(BASE(0), "Memory allocation failed!");
 }
 
 void _(Destruct)() { }
