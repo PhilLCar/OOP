@@ -7,6 +7,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <setjmp.h>
+#include <stdarg.h>
 
 // CUT
 #include <diagnostic.h>
@@ -21,7 +22,7 @@
 
 #define THROW(EXCEPTION) _exception = (Exception*)EXCEPTION; _exception->filename = __FILE__; _exception->line = __LINE__; throw(_exception)
 
-OBJECT (const char *message) BASED (char*)
+OBJECT (const char *message, ...) BASED (char*)
   const char *filename;
   int         line;
   long        code;

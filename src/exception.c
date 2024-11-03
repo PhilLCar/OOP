@@ -95,12 +95,19 @@ void throw(Exception *exception)
 
 #define TYPENAME Exception
 
-Exception *_(Construct)(const char *message) {
+Exception *_(Construct)(const char *message, ...) {
   if (this) {
-    this->base = malloc(strlen(message) + 1);
+    char buffer[4096];
+
+    va_list argptr;
+    va_start(argptr, message);
+    vsnprintf(buffer, sizeof(buffer), message, argptr);
+    va_end(argptr);
+
+    this->base = malloc(strlen(buffer) + 1);
     
     if (this->base) {
-      strcpy(this->base, message);
+      strcpy(this->base, buffer);
     }
   }
 
@@ -111,6 +118,7 @@ void _(Destruct)()
 { 
   if (this) {
     free(this->base);
+    this->base = NULL;
   }
 }
 
