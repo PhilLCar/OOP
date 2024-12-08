@@ -84,9 +84,15 @@ __attribute__((unused)) static Type EXPAND2(_typeof_, TYPENAME) = { \
 .fptr   = METHOD \
 }
 
+#ifdef MEMORY_WATCH
+// Creates a new instance of the object
+#define NEW(TYPENAME) TYPENAME ## _Construct((TYPENAME*)__talloc(&EXPAND2(_typeof_, TYPENAME), __FILE__, __LINE__) __NEW_CONT__
+#define __NEW_CONT__(...) __VA_OPT__(,)__VA_ARGS__)
+#else
 // Creates a new instance of the object
 #define NEW(TYPENAME) TYPENAME ## _Construct((TYPENAME*)talloc(&EXPAND2(_typeof_, TYPENAME)) __NEW_CONT__
 #define __NEW_CONT__(...) __VA_OPT__(,)__VA_ARGS__)
+#endif
  
 // Call a virtual method on the object
 #define CALL(OBJECT, METHOD_NAME) virtual(gettype(OBJECT), #METHOD_NAME)(OBJECT __CALL_CONT__

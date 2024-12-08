@@ -16,7 +16,7 @@
 #define TYPENAME Exception
 
 #define TRY _ex_setup(); if (!setjmp(_ex_jump))
-#define CATCH(EXCEPTION_TYPE) else if (_exception && castable(&OBJECT_TYPE(EXCEPTION_TYPE), gettype(_exception)) && (_ex_caught = 1))
+#define CATCH(EXCEPTION_TYPE) else if (_exception && castable(TYPEOF(EXCEPTION_TYPE), gettype(_exception)) && (_ex_caught = 1))
 #define FINALLY if (_exception)
 #define END_TRY _ex_teardown();
 

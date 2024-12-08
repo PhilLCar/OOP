@@ -15,6 +15,18 @@ VirtualFunction virtual(const Type *type, const char *method)
   return NULL;
 }
 
+#ifdef MEMORY_WATCH
+////////////////////////////////////////////////////////////////////////////////
+void *__talloc(const Type *type, const char *filename, int line)
+{
+  const Type **mem = __malloc(sizeof(const Type*) + type->size, filename, line);
+               
+  if (mem) *mem++ = type;
+
+  return mem;
+}
+#endif
+
 ////////////////////////////////////////////////////////////////////////////////
 void *talloc(const Type *type)
 {

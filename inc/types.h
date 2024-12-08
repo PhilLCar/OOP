@@ -6,18 +6,21 @@
 
 // CUT
 #include <diagnostic.h>
+#include <macro.h>
 
-#define NATIVE_TYPE(NATIVE) (Type){ .name = #NATIVE, .size = sizeof(NATIVE) }
-#define OBJECT_TYPE(OBJECT) _typeof_##OBJECT
 #define OBJECTIFY(NATIVE) \
-static void *NATIVE##_Construct(void *mem) { return mem; } \
-static void  NATIVE##_Destruct(void *mem) {} \
-static Type _typeof_##NATIVE =  { \
-  .name      = #NATIVE, \
+static void *EXPAND2(NATIVE,_Construct)(void *mem) { return mem; } \
+static void  EXPAND2(NATIVE,_Destruct)(void *mem) {} \
+static Type EXPAND2(_typeof_,NATIVE) =  { \
+  .name      = STRINGIZE(NATIVE), \
   .size      = sizeof(NATIVE), \
-  .construct = NATIVE##_Construct, \
-  .destruct  = NATIVE##_Destruct \
+  .construct = EXPAND2(NATIVE,_Construct), \
+  .destruct  = EXPAND2(NATIVE,_Destruct) \
 }
+
+#define NATIVE(TYPE) natives[sizeof(TYPE)]
+
+#define TYPEOF(TYPE) &EXPAND2(_typeof_,TYPE)
 
 typedef void  (*VirtualFunction)(void*, ...);
 
@@ -41,9 +44,32 @@ typedef struct _type {
   const VirtualEntry  *ve_stop;
 } Type;
 
+__attribute__((unused)) static Type _typeof_natives[17] = {
+  { .name = "void",   .size = 0  },
+  { .name = "byte",   .size = 1  },
+  { .name = "word",   .size = 2  },
+  { .name = "?",      .size = 3  },
+  { .name = "double", .size = 4  },
+  { .name = "?",      .size = 5  },
+  { .name = "?",      .size = 6  },
+  { .name = "?",      .size = 7  },
+  { .name = "quad",   .size = 8  },
+  { .name = "?",      .size = 9  },
+  { .name = "?",      .size = 10 },
+  { .name = "?",      .size = 11 },
+  { .name = "?",      .size = 12 },
+  { .name = "?",      .size = 13 },
+  { .name = "?",      .size = 14 },
+  { .name = "?",      .size = 15 },
+  { .name = "octo",   .size = 16 },
+};
+
 // A cast to allow for arbitrary use of parameters
 VirtualFunction virtual(const Type *type, const char *name);
 
+#ifdef MEMORY_WATCH
+void       *__talloc(const Type *type, const char *filename, int line);
+#endif
 
 // Typed malloc
 void       *talloc(const Type *type);
