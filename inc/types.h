@@ -22,7 +22,7 @@ static Type EXPAND2(_typeof_,NATIVE) =  { \
 
 #define TYPEOF(TYPE) &EXPAND2(_typeof_,TYPE)
 
-typedef void  (*VirtualFunction)(void*, ...);
+typedef void *(*VirtualFunction)(void*, ...);
 
 typedef void *(*Constructor)(void*);
 typedef void  (*Destructor)(void*);

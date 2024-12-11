@@ -14,4 +14,6 @@
 #define STRINGIZE(A) __STRINGIZE_CONT__(A)
 #define __STRINGIZE_CONT__(A) #A
 
+#define IFNULL(A, B) ({ void *a = (void*)A; a ? a : B; })
+
 #endif
