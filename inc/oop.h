@@ -56,7 +56,8 @@ __attribute__((unused, section("reflection"))) static Type EXPAND2(_typeof_, TYP
   .construct = (void*)EXPAND2(TYPENAME, _Default), \
   .destruct  = (void*)EXPAND2(TYPENAME, _Destruct), \
   .ve_start  = &EXPAND2(__start_virtual_, TYPENAME) + 1, \
-  .ve_stop   = &EXPAND2(__stop_virtual_, TYPENAME) \
+  .ve_stop   = &EXPAND2(__stop_virtual_, TYPENAME), \
+  .decimal   = 0\
 }
 
 // Underscore to imply member method

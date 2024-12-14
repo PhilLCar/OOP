@@ -27,7 +27,7 @@ int main(void)
   CHECK_MEMORY
 
   TRY {
-    sketchy(NULL);
+    sketchy2(NULL);
   } CATCH (SegmentationFaultException) {
     printf("Caught seg fault exception\n");
   } CATCH (Exception) {
@@ -36,7 +36,7 @@ int main(void)
     printf("Always_executes when throw\n");
   } END_TRY;
 
-  const Type *test = findtype("SegmentationFaultException");
+  const Type *test = TYPEOF(int);
 
   if (test) {
     printf("%s: %ld\n", test->name, test->size);
