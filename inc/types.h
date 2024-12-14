@@ -23,6 +23,7 @@ static Type EXPAND2(_typeof_,NATIVE) =  { \
 #define TYPEOF(TYPE) &EXPAND2(_typeof_,TYPE)
 
 typedef void *(*VirtualFunction)(void*, ...);
+typedef void *(*ConstVirtualFunction)(const void*, ...);
 
 typedef void *(*Constructor)(void*);
 typedef void  (*Destructor)(void*);
@@ -69,7 +70,8 @@ __attribute__((unused, section("reflection"))) static Type _typeof_natives[17] =
 const Type *findtype(const char *typename);
 
 // A cast to allow for arbitrary use of parameters
-VirtualFunction virtual(const Type *type, const char *name);
+VirtualFunction      virtual     (const Type *type, const char *name);
+ConstVirtualFunction constvirtual(const Type *type, const char *name);
 
 #ifdef MEMORY_WATCH
 void       *__talloc(const Type *type, const char *filename, int line);
