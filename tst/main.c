@@ -36,6 +36,12 @@ int main(void)
     printf("Always_executes when throw\n");
   } END_TRY;
 
+  const Type *test = findtype("SegmentationFaultException");
+
+  if (test) {
+    printf("%s: %ld\n", test->name, test->size);
+  }
+
   CHECK_MEMORY
   STOP_WATCHING
   

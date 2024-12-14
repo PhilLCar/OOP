@@ -34,6 +34,7 @@ typedef struct _virtual_entry {
   const void *fptr;
 } VirtualEntry;
 
+// This struct must also be alignable on 16
 typedef struct _type {
   const char          *name;
   const size_t         size;
@@ -42,27 +43,30 @@ typedef struct _type {
   const Destructor     destruct;
   const VirtualEntry  *ve_start;
   const VirtualEntry  *ve_stop;
+  const void          *padding;
 } Type;
 
-__attribute__((unused)) static Type _typeof_natives[17] = {
+__attribute__((unused, section("reflection"))) static Type _typeof_natives[17] = {
   { .name = "void",   .size = 0  },
   { .name = "byte",   .size = 1  },
   { .name = "word",   .size = 2  },
-  { .name = "?",      .size = 3  },
-  { .name = "double", .size = 4  },
-  { .name = "?",      .size = 5  },
-  { .name = "?",      .size = 6  },
-  { .name = "?",      .size = 7  },
+  { .name = "?3",     .size = 3  },
+  { .name = "dword",  .size = 4  },
+  { .name = "?5",     .size = 5  },
+  { .name = "?6",     .size = 6  },
+  { .name = "?7",     .size = 7  },
   { .name = "quad",   .size = 8  },
-  { .name = "?",      .size = 9  },
-  { .name = "?",      .size = 10 },
-  { .name = "?",      .size = 11 },
-  { .name = "?",      .size = 12 },
-  { .name = "?",      .size = 13 },
-  { .name = "?",      .size = 14 },
-  { .name = "?",      .size = 15 },
+  { .name = "?8",     .size = 9  },
+  { .name = "?10",    .size = 10 },
+  { .name = "?11",    .size = 11 },
+  { .name = "?12",    .size = 12 },
+  { .name = "?13",    .size = 13 },
+  { .name = "?14",    .size = 14 },
+  { .name = "?15",    .size = 15 },
   { .name = "octo",   .size = 16 },
 };
+
+const Type *findtype(const char *typename);
 
 // A cast to allow for arbitrary use of parameters
 VirtualFunction virtual(const Type *type, const char *name);

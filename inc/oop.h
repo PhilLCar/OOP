@@ -49,7 +49,7 @@ static void *_(Default)() { \
 } \
 static VirtualEntry EXPAND2(_ve_, TYPENAME) __attribute__((used, section(STRINGIZE(EXPAND2(virtual_, TYPENAME))))) = { .method = "" }; \
 extern VirtualEntry EXPAND2(__start_virtual_, TYPENAME), EXPAND2(__stop_virtual_, TYPENAME); \
-__attribute__((unused)) static Type EXPAND2(_typeof_, TYPENAME) = { \
+__attribute__((unused, section("reflection"))) static Type EXPAND2(_typeof_, TYPENAME) = { \
   .name      = STRINGIZE(TYPENAME), \
   .size      = sizeof(EXPAND(TYPENAME)), \
   .base      = &EXPAND2(_baseof_, TYPENAME), \

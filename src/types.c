@@ -1,6 +1,25 @@
 #include <types.h>
 
 ////////////////////////////////////////////////////////////////////////////////
+const Type* findtype(const char *typename)
+{
+  const Type *start = ({ extern const Type __start_reflection; &__start_reflection; });
+  const Type *end   = ({ extern const Type __stop_reflection;  &__stop_reflection;  });
+
+  if (start && end)
+  {
+    for (const Type *type = start; type != end; type++) {
+      if (strcmp(type->name, typename)) continue;
+
+      return type;
+    }
+  }
+  
+  return NULL;
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
 VirtualFunction virtual(const Type *type, const char *method)
 {
   if (type && method)
