@@ -3,19 +3,46 @@
 ////////////////////////////////////////////////////////////////////////////////
 const Type* findtype(const char *typename)
 {
-  const Type *start = ({ extern const Type __start_reflection; &__start_reflection; });
-  const Type *end   = ({ extern const Type __stop_reflection;  &__stop_reflection;  });
+  const Type *result = NULL;
+  char *_typename;
 
-  if (start && end)
-  {
-    for (const Type *type = start; type != end; type++) {
-      if (strcmp(type->name, typename)) continue;
+  // to handle composite types
+  if (strchr(typename, ' ')) {
+    int len = strlen(typename);
 
-      return type;
+    _typename = malloc(len);
+
+    for (int i = 0, j = 0; i < len; i++, j++) {
+      while (typename[j] == ' ') ++j;
+      _typename[i] = typename[j];
+      if (!typename[j]) break;
+    }
+  } else {
+    _typename = (void*)typename;
+  }
+
+  if (strchr(typename, '*')) {
+     result = &_typeof_pointer;
+  } else {
+    const Type *start = ({ extern const Type __start_reflection; &__start_reflection; });
+    const Type *end   = ({ extern const Type __stop_reflection;  &__stop_reflection;  });
+
+    if (start && end)
+    {
+      for (const Type *type = start; type != end; type++) {
+        if (!strcmp(type->name, _typename)) {
+          result = type;
+          break;
+        }
+      }
     }
   }
+
+  if (_typename != typename) {
+    free(_typename);
+  }
   
-  return NULL;
+  return result;
 }
 
 
@@ -83,7 +110,7 @@ const char *typename(const void *object)
 ////////////////////////////////////////////////////////////////////////////////
 int isobject(const Type *type)
 {
-  return type->destruct != NULL;
+  return type->category == TYPES_OBJECT;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

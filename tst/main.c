@@ -36,10 +36,10 @@ int main(void)
     printf("Always_executes when throw\n");
   } END_TRY;
 
-  const Type *test = TYPEOF(int);
+  const Type *test = TYPEOF(long double);
 
   if (test) {
-    printf("%s: %ld\n", test->name, test->size);
+    printf("%s (%ld): %ld\n", test->name, test->size, test->category);
   }
 
   CHECK_MEMORY

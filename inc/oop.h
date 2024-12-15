@@ -57,7 +57,7 @@ __attribute__((unused, section("reflection"))) static Type EXPAND2(_typeof_, TYP
   .destruct  = (void*)EXPAND2(TYPENAME, _Destruct), \
   .ve_start  = &EXPAND2(__start_virtual_, TYPENAME) + 1, \
   .ve_stop   = &EXPAND2(__stop_virtual_, TYPENAME), \
-  .decimal   = 0\
+  .category  = TYPES_OBJECT\
 }
 
 // Underscore to imply member method
@@ -101,7 +101,8 @@ __attribute__((unused, section("reflection"))) static Type EXPAND2(_typeof_, TYP
 
 #define DELETE(OBJECT) \
 if (OBJECT) { \
-  gettype(OBJECT)->destruct(OBJECT); \
+  const Type *type = gettype(OBJECT); \
+  if (type->destruct) type->destruct(OBJECT); \
   tfree(OBJECT); \
   OBJECT = NULL; \
 }

@@ -3,6 +3,7 @@
 
 // C
 #include <stdlib.h>
+#include <string.h>
 
 // CUT
 #include <diagnostic.h>
@@ -20,6 +21,13 @@ static Type EXPAND2(_typeof_,NATIVE) =  { \
 
 #define TYPEOF(TYPE) IFNULL(findtype(#TYPE), &_typeof_natives[sizeof(TYPE)])
 #define TYPE(T) &EXPAND2(_typeof_, T)
+
+// This emulates an enum with the long data type, (required to pad the struct)
+typedef long Types;
+#define TYPES_DEFAULT 0L
+#define TYPES_DECIMAL 1L
+#define TYPES_POINTER 2L
+#define TYPES_OBJECT  3L
 
 typedef void *(*VirtualFunction)(void*, ...);
 typedef void *(*ConstVirtualFunction)(const void*, ...);
@@ -43,33 +51,36 @@ typedef struct _type {
   const Destructor     destruct;
   const VirtualEntry  *ve_start;
   const VirtualEntry  *ve_stop;
-  const long           decimal;
+  const Types          category;
 } Type;
 
 __attribute__((unused, section("reflection"))) static Type _typeof_natives[17] = {
-  { .name = "void",  .size = 0,  .decimal = 0 },
-  { .name = "byte",  .size = 1,  .decimal = 0 },
-  { .name = "word",  .size = 2,  .decimal = 0 },
-  { .name = "?3",    .size = 3,  .decimal = 0 },
-  { .name = "dword", .size = 4,  .decimal = 0 },
-  { .name = "?5",    .size = 5,  .decimal = 0 },
-  { .name = "?6",    .size = 6,  .decimal = 0 },
-  { .name = "?7",    .size = 7,  .decimal = 0 },
-  { .name = "quad",  .size = 8,  .decimal = 0 },
-  { .name = "?8",    .size = 9,  .decimal = 0 },
-  { .name = "?10",   .size = 10, .decimal = 0 },
-  { .name = "?11",   .size = 11, .decimal = 0 },
-  { .name = "?12",   .size = 12, .decimal = 0 },
-  { .name = "?13",   .size = 13, .decimal = 0 },
-  { .name = "?14",   .size = 14, .decimal = 0 },
-  { .name = "?15",   .size = 15, .decimal = 0 },
-  { .name = "octo",  .size = 16, .decimal = 0 },
+  { .name = "void",  .size = 0,  .category = TYPES_DEFAULT },
+  { .name = "byte",  .size = 1,  .category = TYPES_DEFAULT },
+  { .name = "word",  .size = 2,  .category = TYPES_DEFAULT },
+  { .name = "?3",    .size = 3,  .category = TYPES_DEFAULT },
+  { .name = "dword", .size = 4,  .category = TYPES_DEFAULT },
+  { .name = "?5",    .size = 5,  .category = TYPES_DEFAULT },
+  { .name = "?6",    .size = 6,  .category = TYPES_DEFAULT },
+  { .name = "?7",    .size = 7,  .category = TYPES_DEFAULT },
+  { .name = "quad",  .size = 8,  .category = TYPES_DEFAULT },
+  { .name = "?8",    .size = 9,  .category = TYPES_DEFAULT },
+  { .name = "?10",   .size = 10, .category = TYPES_DEFAULT },
+  { .name = "?11",   .size = 11, .category = TYPES_DEFAULT },
+  { .name = "?12",   .size = 12, .category = TYPES_DEFAULT },
+  { .name = "?13",   .size = 13, .category = TYPES_DEFAULT },
+  { .name = "?14",   .size = 14, .category = TYPES_DEFAULT },
+  { .name = "?15",   .size = 15, .category = TYPES_DEFAULT },
+  { .name = "octo",  .size = 16, .category = TYPES_DEFAULT },
 };
 
-__attribute__((unused, section("reflection"))) static Type _floats[3] = {
-  { .name = "float",       .size = sizeof(float),       .decimal = 1 },
-  { .name = "double",      .size = sizeof(double),      .decimal = 1 },
-  { .name = "long double", .size = sizeof(long double), .decimal = 1 }
+__attribute__((unused, section("reflection"))) static Type _typeof_pointer =
+  { .name = "pointer", .size = sizeof(void*), .category = TYPES_POINTER };
+
+__attribute__((unused, section("reflection"))) static Type _typeof_floats[3] = {
+  { .name = "float",      .size = sizeof(float),       .category = TYPES_DECIMAL },
+  { .name = "double",     .size = sizeof(double),      .category = TYPES_DECIMAL },
+  { .name = "longdouble", .size = sizeof(long double), .category = TYPES_DECIMAL }
 };
 
 
