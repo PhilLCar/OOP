@@ -15,14 +15,15 @@
 
 #define TYPENAME Exception
 
-#define TRY _ex_setup(); if (!setjmp(_ex_jump))
-#define CATCH(EXCEPTION_TYPE) else if (_exception && castable(TYPEOF(EXCEPTION_TYPE), gettype(_exception)) && (_ex_caught = 1))
-#define FINALLY if (_exception)
-#define END_TRY _ex_teardown();
+#define TRY _ex_setup(); if (!setjmp(_ex_jump)) {
+#define CATCH(EXCEPTION_TYPE) } else if (_exception && castable(TYPE(EXCEPTION_TYPE), gettype(_exception)) && (_ex_caught = 1)) {
+#define END_TRY } _ex_teardown();
 
 #define THROW(EXCEPTION) _exception = (Exception*)EXCEPTION; _exception->filename = __FILE__; _exception->line = __LINE__; throw(_exception)
 
-OBJECT (const char *message, ...) BASED (char*)
+#define CAST(TYPE, OBJECT) (TYPE)cast(TYPEOF(TYPE), OBJECT)
+
+OBJECT (const char *message, ...) INHERIT (char*)
   const char *filename;
   int         line;
   long        code;
@@ -37,6 +38,9 @@ void _ex_setup();
 void _ex_teardown();
 
 void throw(Exception *exception);
+
+// Cast the object to the specified type
+void *cast(const Type *type, void *object);
 
 #undef TYPENAME
 #define TYPENAME SegmentationFaultException

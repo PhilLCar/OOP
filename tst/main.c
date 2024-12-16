@@ -26,15 +26,16 @@ int main(void)
 {
   CHECK_MEMORY
 
-  TRY {
-    sketchy2(NULL);
-  } CATCH (SegmentationFaultException) {
+  TRY
+    sketchy(NULL);
+
+  CATCH (SegmentationFaultException)
     printf("Caught seg fault exception\n");
-  } CATCH (Exception) {
+
+  CATCH (Exception)
     printf("Caught exception: %s\n", _exception->base);
-  } FINALLY {
-    printf("Always_executes when throw\n");
-  } END_TRY;
+
+  END_TRY;
 
   const Type *test = TYPEOF(long double);
 

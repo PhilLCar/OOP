@@ -3,43 +3,46 @@
 ////////////////////////////////////////////////////////////////////////////////
 const Type* findtype(const char *typename)
 {
-  const Type *result = NULL;
-  char *_typename;
+    const Type *result = NULL;
 
-  // to handle composite types
-  if (strchr(typename, ' ')) {
-    int len = strlen(typename);
+  if (typename) {
+    char *_typename;
 
-    _typename = malloc(len);
+    // to handle composite types
+    if (strchr(typename, ' ')) {
+      int len = strlen(typename);
 
-    for (int i = 0, j = 0; i < len; i++, j++) {
-      while (typename[j] == ' ') ++j;
-      _typename[i] = typename[j];
-      if (!typename[j]) break;
+      _typename = malloc(len);
+
+      for (int i = 0, j = 0; i < len; i++, j++) {
+        while (typename[j] == ' ') ++j;
+        _typename[i] = typename[j];
+        if (!typename[j]) break;
+      }
+    } else {
+      _typename = (void*)typename;
     }
-  } else {
-    _typename = (void*)typename;
-  }
 
-  if (strchr(typename, '*')) {
-     result = &_typeof_pointer;
-  } else {
-    const Type *start = ({ extern const Type __start_reflection; &__start_reflection; });
-    const Type *end   = ({ extern const Type __stop_reflection;  &__stop_reflection;  });
+    if (strchr(typename, '*')) {
+      result = &_typeof_pointer;
+    } else {
+      const Type *start = ({ extern const Type __start_reflection; &__start_reflection; });
+      const Type *end   = ({ extern const Type __stop_reflection;  &__stop_reflection;  });
 
-    if (start && end)
-    {
-      for (const Type *type = start; type != end; type++) {
-        if (!strcmp(type->name, _typename)) {
-          result = type;
-          break;
+      if (start && end)
+      {
+        for (const Type *type = start; type != end; type++) {
+          if (!strcmp(type->name, _typename)) {
+            result = type;
+            break;
+          }
         }
       }
     }
-  }
 
-  if (_typename != typename) {
-    free(_typename);
+    if (_typename != typename) {
+      free(_typename);
+    }
   }
   
   return result;
@@ -49,14 +52,16 @@ const Type* findtype(const char *typename)
 ////////////////////////////////////////////////////////////////////////////////
 VirtualFunction virtual(const Type *type, const char *method)
 {
-  if (type && method)
-  {
-    for (const VirtualEntry *ve = type->ve_start; ve != type->ve_stop; ve++) {
-      if (strcmp(ve->method, method)) continue;
+  do {
+    if (type && method)
+    {
+      for (const VirtualEntry *ve = type->ve_start; ve != type->ve_stop; ve++) {
+        if (strcmp(ve->method, method)) continue;
 
-      return ve->fptr;
+        return ve->fptr;
+      }
     }
-  }
+  } while ((type = getbase(type)));
   
   return NULL;
 }
@@ -102,6 +107,12 @@ const Type *gettype(const void *object)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+const Type *getbase(const Type *type)
+{
+  return findtype(type->basename ? *type->basename : NULL);
+}
+
+////////////////////////////////////////////////////////////////////////////////
 const char *typename(const void *object)
 {
   return gettype(object)->name;
@@ -125,5 +136,5 @@ int castable(const Type *base, const Type *derived)
   if (!derived)                return 0;
   if (sametype(base, derived)) return 1;
 
-  return castable(base, *derived->base);
+  return castable(base, getbase(derived));
 }

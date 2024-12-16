@@ -19,17 +19,7 @@ void _(Destruct)();
 
 // Inherit from an object
 #define INHERIT(BASE_TYPENAME) \
-static const Type *EXPAND2(_baseof_, TYPENAME) = &_typeof_##BASE_TYPENAME; \
-struct EXPAND2(_, TYPENAME) { \
-BASE_TYPENAME base;
-
-// For the linter only
-#define __ }
-#undef __
-
-// Based on a native type
-#define BASED(BASE_TYPENAME) \
-static const Type *EXPAND2(_baseof_, TYPENAME) = NULL; \
+static const char *EXPAND2(_baseof_, TYPENAME) = #BASE_TYPENAME; \
 struct EXPAND2(_, TYPENAME) { \
 BASE_TYPENAME base;
 
@@ -38,7 +28,7 @@ BASE_TYPENAME base;
 #undef __
 
 #define NOBASE \
-static const Type *EXPAND2(_baseof_, TYPENAME) = NULL; \
+static const char *EXPAND2(_baseof_, TYPENAME) = NULL; \
 struct EXPAND2(_, TYPENAME) {
 
 // This is to standardize inheriting and non-inheriting objects' definitions
@@ -52,7 +42,7 @@ extern VirtualEntry EXPAND2(__start_virtual_, TYPENAME), EXPAND2(__stop_virtual_
 __attribute__((unused, section("reflection"))) static Type EXPAND2(_typeof_, TYPENAME) = { \
   .name      = STRINGIZE(TYPENAME), \
   .size      = sizeof(EXPAND(TYPENAME)), \
-  .base      = &EXPAND2(_baseof_, TYPENAME), \
+  .basename  = &EXPAND2(_baseof_, TYPENAME), \
   .construct = (void*)EXPAND2(TYPENAME, _Default), \
   .destruct  = (void*)EXPAND2(TYPENAME, _Destruct), \
   .ve_start  = &EXPAND2(__start_virtual_, TYPENAME) + 1, \

@@ -9,16 +9,6 @@
 #include <diagnostic.h>
 #include <macro.h>
 
-#define OBJECTIFY(NATIVE) \
-static void *EXPAND2(NATIVE,_Construct)(void *mem) { return mem; } \
-static void  EXPAND2(NATIVE,_Destruct)(void *mem) {} \
-static Type EXPAND2(_typeof_,NATIVE) =  { \
-  .name      = STRINGIZE(NATIVE), \
-  .size      = sizeof(NATIVE), \
-  .construct = EXPAND2(NATIVE,_Construct), \
-  .destruct  = EXPAND2(NATIVE,_Destruct) \
-}
-
 #define TYPEOF(TYPE) IFNULL(findtype(#TYPE), &_typeof_natives[sizeof(TYPE)])
 #define TYPE(T) &EXPAND2(_typeof_, T)
 
@@ -46,7 +36,7 @@ typedef struct _virtual_entry {
 typedef struct _type {
   const char          *name;
   const size_t         size;
-  const struct _type **base;
+  const char         **basename;
   const Constructor    construct;
   const Destructor     destruct;
   const VirtualEntry  *ve_start;
@@ -102,6 +92,9 @@ void        tfree(void *object);
 
 // Gets the type of an object
 const Type *gettype(const void *object);
+
+// Get the base of the specified type
+const Type *getbase(const Type *type);
 
 // Gets the typename of an object
 const char *typename(const void *object);

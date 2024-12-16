@@ -93,6 +93,18 @@ void throw(Exception *exception)
   raise(SIGUSR1);
 }
 
+////////////////////////////////////////////////////////////////////////////////
+void *cast(const Type *type, void *object)
+{
+  const Type *objType = gettype(object);
+
+  if (!castable(type, objType)) {
+    THROW (NEW (Exception) ("Cannot cast an object of type '%s' to '%s'", objType->name, type->name));
+  }
+
+  return object;
+}
+
 #define TYPENAME Exception
 
 Exception *_(Construct)(const char *message, ...) {
