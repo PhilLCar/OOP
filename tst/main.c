@@ -37,11 +37,15 @@ int main(void)
 
   END_TRY;
 
-  const Type *test = TYPEOF(long double);
+  double *db = NEW (longdouble)(3.2);
+
+  const Type *test = gettype(db);
 
   if (test) {
     printf("%s (%ld): %ld\n", test->name, test->size, test->category);
   }
+
+  DELETE(db);
 
   CHECK_MEMORY
   STOP_WATCHING

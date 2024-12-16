@@ -19,7 +19,7 @@
 #define CATCH(EXCEPTION_TYPE) } else if (_exception && castable(TYPE(EXCEPTION_TYPE), gettype(_exception)) && (_ex_caught = 1)) {
 #define END_TRY } _ex_teardown();
 
-#define THROW(EXCEPTION) _exception = (Exception*)EXCEPTION; _exception->filename = __FILE__; _exception->line = __LINE__; throw(_exception)
+#define THROW(EXCEPTION) { _exception = (Exception*)EXCEPTION; _exception->filename = __FILE__; _exception->line = __LINE__; throw(_exception); }
 
 #define CAST(TYPE, OBJECT) (TYPE)cast(TYPEOF(TYPE), OBJECT)
 

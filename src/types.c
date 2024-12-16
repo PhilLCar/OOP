@@ -24,7 +24,7 @@ const Type* findtype(const char *typename)
     }
 
     if (strchr(typename, '*')) {
-      result = &_typeof_pointer;
+      result = &_typeof_Pointer;
     } else {
       const Type *start = ({ extern const Type __start_reflection; &__start_reflection; });
       const Type *end   = ({ extern const Type __stop_reflection;  &__stop_reflection;  });

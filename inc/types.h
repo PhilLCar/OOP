@@ -12,18 +12,38 @@
 #define TYPEOF(TYPE) IFNULL(findtype(#TYPE), &_typeof_natives[sizeof(TYPE)])
 #define TYPE(T) &EXPAND2(_typeof_, T)
 
+#define MAKETYPE(TYPE, CATEGORY) \
+__attribute((unused))\
+static void *TYPE##_Construct(void *mem, TYPE val) {\
+  memcpy(mem, &val, sizeof(TYPE));\
+  return mem;\
+}\
+__attribute__((unused, section("reflection"))) \
+static Type _typeof_##TYPE = { .name = #TYPE, .size = sizeof(TYPE), .category = CATEGORY};
+
+#define MAKETYPE2(TYPE1, TYPE2, CATEGORY) \
+typedef TYPE1 TYPE2 TYPE1##TYPE2; \
+MAKETYPE(TYPE1##TYPE2, CATEGORY)
+
+#define MAKETYPE3(TYPE1, TYPE2, TYPE3, CATEGORY) \
+typedef TYPE1 TYPE2 TYPE3 TYPE1##TYPE2##TYPE3; \
+MAKETYPE(TYPE1##TYPE2##TYPE3, CATEGORY)
+
 // This emulates an enum with the long data type, (required to pad the struct)
 typedef long Types;
-#define TYPES_DEFAULT 0L
-#define TYPES_DECIMAL 1L
-#define TYPES_POINTER 2L
-#define TYPES_OBJECT  3L
+#define TYPES_DEFAULT  0L
+#define TYPES_DECIMAL  1L
+#define TYPES_POINTER  2L
+#define TYPES_OBJECT   3L
+#define TYPES_UNSIGNED 4L
 
 typedef void *(*VirtualFunction)(void*, ...);
 typedef void *(*ConstVirtualFunction)(const void*, ...);
 
 typedef void *(*Constructor)(void*);
 typedef void  (*Destructor)(void*);
+
+typedef void *Pointer;
 
 // This struct must be alignable on 16 both in x32 and x64 because 
 // we depend on it being stacked properly for ve table iteration
@@ -44,6 +64,31 @@ typedef struct _type {
   const Types          category;
 } Type;
 
+// Pointer
+MAKETYPE(Pointer, TYPES_POINTER);
+
+// Floats
+MAKETYPE (float,        TYPES_DECIMAL);
+MAKETYPE (double,       TYPES_DECIMAL);
+MAKETYPE2(long, double, TYPES_DECIMAL);
+
+// Integers
+MAKETYPE (char,       TYPES_DEFAULT);
+MAKETYPE (short,      TYPES_DEFAULT);
+MAKETYPE (int,        TYPES_DEFAULT);
+MAKETYPE (long,       TYPES_DEFAULT);
+MAKETYPE2(long, int,  TYPES_DEFAULT);
+MAKETYPE2(long, long, TYPES_DEFAULT);
+
+// Unsigned integers
+MAKETYPE2(unsigned, char,       TYPES_UNSIGNED);
+MAKETYPE2(unsigned, short,      TYPES_UNSIGNED);
+MAKETYPE2(unsigned, int,        TYPES_UNSIGNED);
+MAKETYPE2(unsigned, long,       TYPES_UNSIGNED);
+MAKETYPE3(unsigned, long, int,  TYPES_UNSIGNED);
+MAKETYPE3(unsigned, long, long, TYPES_UNSIGNED);
+
+// Fallback types if normal ones are not found
 __attribute__((unused, section("reflection"))) static Type _typeof_natives[17] = {
   { .name = "void",  .size = 0,  .category = TYPES_DEFAULT },
   { .name = "byte",  .size = 1,  .category = TYPES_DEFAULT },
@@ -63,16 +108,6 @@ __attribute__((unused, section("reflection"))) static Type _typeof_natives[17] =
   { .name = "?15",   .size = 15, .category = TYPES_DEFAULT },
   { .name = "octo",  .size = 16, .category = TYPES_DEFAULT },
 };
-
-__attribute__((unused, section("reflection"))) static Type _typeof_pointer =
-  { .name = "pointer", .size = sizeof(void*), .category = TYPES_POINTER };
-
-__attribute__((unused, section("reflection"))) static Type _typeof_floats[3] = {
-  { .name = "float",      .size = sizeof(float),       .category = TYPES_DECIMAL },
-  { .name = "double",     .size = sizeof(double),      .category = TYPES_DECIMAL },
-  { .name = "longdouble", .size = sizeof(long double), .category = TYPES_DECIMAL }
-};
-
 
 const Type *findtype(const char *typename);
 
