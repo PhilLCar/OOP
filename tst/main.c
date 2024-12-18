@@ -37,12 +37,13 @@ int main(void)
 
   END_TRY;
 
-  double *db = NEW (longdouble)(3.2);
+  double *db = NEW (double)(3.2);
 
   const Type *test = gettype(db);
 
   if (test) {
     printf("%s (%ld): %ld\n", test->name, test->size, test->category);
+    printf("%lf\n", *db);
   }
 
   DELETE(db);

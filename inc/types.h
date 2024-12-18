@@ -32,10 +32,11 @@ MAKETYPE(TYPE1##TYPE2##TYPE3, CATEGORY)
 // This emulates an enum with the long data type, (required to pad the struct)
 typedef long Types;
 #define TYPES_DEFAULT  0L
-#define TYPES_DECIMAL  1L
-#define TYPES_POINTER  2L
-#define TYPES_OBJECT   3L
-#define TYPES_UNSIGNED 4L
+#define TYPES_POINTER  1L
+#define TYPES_SIGNED   2L
+#define TYPES_UNSIGNED 3L
+#define TYPES_FLOAT    4L
+#define TYPES_OBJECT   5L
 
 typedef void *(*VirtualFunction)(void*, ...);
 typedef void *(*ConstVirtualFunction)(const void*, ...);
@@ -68,17 +69,17 @@ typedef struct _type {
 MAKETYPE(Pointer, TYPES_POINTER);
 
 // Floats
-MAKETYPE (float,        TYPES_DECIMAL);
-MAKETYPE (double,       TYPES_DECIMAL);
-MAKETYPE2(long, double, TYPES_DECIMAL);
+MAKETYPE(float,      TYPES_FLOAT);
+MAKETYPE(double,     TYPES_FLOAT);
+MAKETYPE(__float128, TYPES_FLOAT);
 
-// Integers
-MAKETYPE (char,       TYPES_DEFAULT);
-MAKETYPE (short,      TYPES_DEFAULT);
-MAKETYPE (int,        TYPES_DEFAULT);
-MAKETYPE (long,       TYPES_DEFAULT);
-MAKETYPE2(long, int,  TYPES_DEFAULT);
-MAKETYPE2(long, long, TYPES_DEFAULT);
+// Signed ntegers
+MAKETYPE (char,       TYPES_SIGNED);
+MAKETYPE (short,      TYPES_SIGNED);
+MAKETYPE (int,        TYPES_SIGNED);
+MAKETYPE (long,       TYPES_SIGNED);
+MAKETYPE2(long, int,  TYPES_SIGNED);
+MAKETYPE2(long, long, TYPES_SIGNED);
 
 // Unsigned integers
 MAKETYPE2(unsigned, char,       TYPES_UNSIGNED);
