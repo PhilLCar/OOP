@@ -66,7 +66,9 @@ typedef struct _type {
   const Types          category;
 } Type;
 
+#ifdef WIN
 DECLARE_SECTION(reflection, __declspec(selectany) const Type)
+#endif
 
 // Pointer
 MAKETYPE(Pointer, TYPES_POINTER);
@@ -79,7 +81,7 @@ MAKETYPE(double,     TYPES_FLOAT);
 MAKETYPE(__float128, TYPES_FLOAT);
 #endif
 
-// Signed ntegers
+// Signed integers
 MAKETYPE (char,       TYPES_SIGNED);
 MAKETYPE (short,      TYPES_SIGNED);
 MAKETYPE (int,        TYPES_SIGNED);

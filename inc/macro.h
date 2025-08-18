@@ -26,7 +26,7 @@
 #define USED_SECTION(NAME) __declspec(allocate(NAME "$1"))
 #define UNUSED_SECTION(NAME) USED_SECTION(NAME)
 #else
-#define SECTION_DECLARATION(NAME, TYPE)
+#define DECLARE_SECTION(NAME, TYPE)
 #define USED_SECTION(NAME)   __attribute__((used,   section(NAME)))
 #define UNUSED_SECTION(NAME) __attribute__((unused, section(NAME)))
 #endif

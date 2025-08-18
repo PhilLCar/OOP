@@ -1,4 +1,3 @@
-#define IMPORT_PUBLIC
 #include <exception.h>
 
 int sketchy(void *env)
