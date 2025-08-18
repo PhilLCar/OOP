@@ -6,6 +6,7 @@
 #include <string.h>
 
 // CUT
+#include <osal.h>
 #include <diagnostic.h>
 #include <macro.h>
 
@@ -18,7 +19,7 @@ static void *TYPE##_Construct(void *mem, TYPE val) {\
   memcpy(mem, &val, sizeof(TYPE));\
   return mem;\
 }\
-__attribute__((unused, section("reflection"))) \
+UNUSED_SECTION("reflection") \
 static Type _typeof_##TYPE = { .name = #TYPE, .size = sizeof(TYPE), .category = CATEGORY};
 
 #define MAKETYPE2(TYPE1, TYPE2, CATEGORY) \
@@ -65,13 +66,18 @@ typedef struct _type {
   const Types          category;
 } Type;
 
+DECLARE_SECTION(reflection, __declspec(selectany) const Type)
+
 // Pointer
 MAKETYPE(Pointer, TYPES_POINTER);
 
 // Floats
 MAKETYPE(float,      TYPES_FLOAT);
 MAKETYPE(double,     TYPES_FLOAT);
+
+#ifndef WIN
 MAKETYPE(__float128, TYPES_FLOAT);
+#endif
 
 // Signed ntegers
 MAKETYPE (char,       TYPES_SIGNED);
@@ -79,7 +85,10 @@ MAKETYPE (short,      TYPES_SIGNED);
 MAKETYPE (int,        TYPES_SIGNED);
 MAKETYPE (long,       TYPES_SIGNED);
 MAKETYPE2(long, int,  TYPES_SIGNED);
+
+#ifndef WIN
 MAKETYPE2(long, long, TYPES_SIGNED);
+#endif
 
 // Unsigned integers
 MAKETYPE2(unsigned, char,       TYPES_UNSIGNED);
@@ -87,10 +96,13 @@ MAKETYPE2(unsigned, short,      TYPES_UNSIGNED);
 MAKETYPE2(unsigned, int,        TYPES_UNSIGNED);
 MAKETYPE2(unsigned, long,       TYPES_UNSIGNED);
 MAKETYPE3(unsigned, long, int,  TYPES_UNSIGNED);
+
+#ifndef WIN
 MAKETYPE3(unsigned, long, long, TYPES_UNSIGNED);
+#endif
 
 // Fallback types if normal ones are not found
-__attribute__((unused, section("reflection"))) static Type _typeof_natives[17] = {
+UNUSED_SECTION("reflection") static Type _typeof_natives[17] = {
   { .name = "void",  .size = 0,  .category = TYPES_DEFAULT },
   { .name = "byte",  .size = 1,  .category = TYPES_DEFAULT },
   { .name = "word",  .size = 2,  .category = TYPES_DEFAULT },
@@ -117,31 +129,31 @@ VirtualFunction      virtual     (const Type *type, const char *name);
 ConstVirtualFunction constvirtual(const Type *type, const char *name);
 
 #ifdef MEMORY_WATCH
-void       *__talloc(const Type *type, const char *filename, int line);
+PUBLIC void       *__talloc(const Type *type, const char *filename, int line);
 #endif
 
 // Typed malloc
-void       *talloc(const Type *type);
+PUBLIC void       *talloc(const Type *type);
 
 // Typed free
-void        tfree(void *object);
+PUBLIC void        tfree(void *object);
 
 // Gets the type of an object
-const Type *gettype(const void *object);
+PUBLIC const Type *gettype(const void *object);
 
 // Get the base of the specified type
-const Type *getbase(const Type *type);
+PUBLIC const Type *getbase(const Type *type);
 
 // Gets the typename of an object
-const char *typename(const void *object);
+PUBLIC const char *typename(const void *object);
 
 // True if the type represents an object
-int         isobject(const Type *type);
+PUBLIC int         isobject(const Type *type);
 
 // Compares the two types
-int         sametype(const Type *a, const Type *b);
+PUBLIC int         sametype(const Type *a, const Type *b);
 
 // Search the inheritance tree for the type
-int         castable(const Type *base, const Type *derived);
+PUBLIC int         castable(const Type *base, const Type *derived);
 
 #endif

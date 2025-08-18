@@ -10,8 +10,13 @@
 #include <stdarg.h>
 
 // CUT
+#include <osal.h>
 #include <diagnostic.h>
 #include <oop.h>
+
+#ifdef WIN
+#define SIGUSR1 SIGABRT
+#endif
 
 #define TYPENAME Exception
 
@@ -29,18 +34,18 @@ OBJECT (const char *message, ...) INHERIT (char*)
   long        code;
 END_OBJECT("An unknown error occured!");
 
-extern Exception *_exception;
-extern Exception  _ex_plchold;
-extern jmp_buf    _ex_jump;
-extern int        _ex_caught;
+PUBLIC extern Exception *_exception;
+PUBLIC extern Exception  _ex_plchold;
+PUBLIC extern jmp_buf    _ex_jump;
+PUBLIC extern int        _ex_caught;
 
-void _ex_setup();
-void _ex_teardown();
+PUBLIC void _ex_setup();
+PUBLIC void _ex_teardown();
 
-void throw(Exception *exception);
+PUBLIC void throw(Exception *exception);
 
 // Cast the object to the specified type
-void *cast(const Type *type, void *object);
+PUBLIC void *cast(const Type *type, void *object);
 
 #undef TYPENAME
 #define TYPENAME SegmentationFaultException

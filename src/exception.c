@@ -1,10 +1,10 @@
 #include <exception.h>
 
-Exception *_exception   = NULL;
-Exception  _ex_plchold  = {};
-jmp_buf    _ex_jump     = {};
-int        _ex_caught   = 0;
-int        _handler_set = 0;
+PUBLIC Exception *_exception   = NULL;
+PUBLIC Exception  _ex_plchold  = {};
+PUBLIC jmp_buf    _ex_jump     = {};
+PUBLIC int        _ex_caught   = 0;
+PUBLIC int        _handler_set = 0;
 
 void _ex_set_exception(int signal)
 {
