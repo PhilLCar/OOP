@@ -1,5 +1,9 @@
 #include <exception.h>
 
+#ifdef WIN
+#pragma clang diagnostic ignored "-Wnull-dereference"
+#endif
+
 int sketchy(void *env)
 {
   printf("Entered sketchy function\n");
@@ -15,7 +19,7 @@ int sketchy2(void *env)
 {
   printf("Entered sketchy function 2\n");
 
-  void *a = *(void**)NULL;
+  volatile void *a = *(void**)NULL;
 
   printf("Exited sketchy function\n");
 
@@ -42,7 +46,7 @@ int main(void)
   const Type *test = gettype(db);
 
   if (test) {
-    printf("%s (%ld): %ld\n", test->name, test->size, test->category);
+    printf("%s (%lld): %lld\n", test->name, test->size, test->category);
     printf("%lf\n", *db);
   }
 
