@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>OOP</id>
-	<version> 2025.8.18.2146 </version>
+	<version> 2025.8.18.2204 </version>
     <authors>Philippe Caron</authors>
     <description>OOP Package provides Object Oriented Programming macros for C</description>
 	<readme>docs\README.md</readme>
@@ -17,6 +17,7 @@
     <file src="..\bin\x64\Release\OOP.dll" target="lib\native\oop.dll" />
     <file src="..\bin\x64\Release\OOP.lib" target="lib\native\oop.lib" />
     <file src="..\bin\x64\Release\OOP.pdb" target="lib\native\oop.pdb" />
+    <file src="..\inc\*.h"                 target="build\native\include\" />
     <file src="..\win\oop.targets"         target="build\native\oop.targets" />
     <file src="..\win\oop.props"           target="build\native\oop.props" />
     <file src="..\README.md"               target="docs\README.md" />
