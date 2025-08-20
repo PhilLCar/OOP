@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="..\packages\Diagnostic.2025.8.19.2218\build\native\diagnostic.props" Condition="Exists('..\packages\Diagnostic.2025.8.19.2218\build\native\diagnostic.props')" />
-  <Import Project="..\packages\IO.2025.8.19.2153\build\native\io.props" Condition="Exists('..\packages\IO.2025.8.19.2153\build\native\io.props')" />
+  <Import Project="..\packages\IO.2025.8.20.1615\build\native\io.props" Condition="Exists('..\packages\IO.2025.8.20.1615\build\native\io.props')" />
+  <Import Project="..\packages\Diagnostic.2025.8.20.1612\build\native\diagnostic.props" Condition="Exists('..\packages\Diagnostic.2025.8.20.1612\build\native\diagnostic.props')" />
   <Import Project="packages\Diagnostic.2025.8.11.1708\build\native\diagnostic.props" Condition="Exists('packages\Diagnostic.2025.8.11.1708\build\native\diagnostic.props')" />
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -25,12 +25,12 @@
     <ClCompile Include="..\..\tst\*" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\OOP\OOP.vcxproj">
       <Project>{3fe4671a-04e0-4d90-8bd4-8376a7288471}</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
@@ -166,16 +166,16 @@
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
-    <Import Project="..\packages\IO.2025.8.19.2153\build\native\io.targets" Condition="Exists('..\packages\IO.2025.8.19.2153\build\native\io.targets')" />
-    <Import Project="..\packages\Diagnostic.2025.8.19.2218\build\native\diagnostic.targets" Condition="Exists('..\packages\Diagnostic.2025.8.19.2218\build\native\diagnostic.targets')" />
+    <Import Project="..\packages\Diagnostic.2025.8.20.1612\build\native\diagnostic.targets" Condition="Exists('..\packages\Diagnostic.2025.8.20.1612\build\native\diagnostic.targets')" />
+    <Import Project="..\packages\IO.2025.8.20.1615\build\native\io.targets" Condition="Exists('..\packages\IO.2025.8.20.1615\build\native\io.targets')" />
   </ImportGroup>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('..\packages\IO.2025.8.19.2153\build\native\io.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\IO.2025.8.19.2153\build\native\io.props'))" />
-    <Error Condition="!Exists('..\packages\IO.2025.8.19.2153\build\native\io.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\IO.2025.8.19.2153\build\native\io.targets'))" />
-    <Error Condition="!Exists('..\packages\Diagnostic.2025.8.19.2218\build\native\diagnostic.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Diagnostic.2025.8.19.2218\build\native\diagnostic.props'))" />
-    <Error Condition="!Exists('..\packages\Diagnostic.2025.8.19.2218\build\native\diagnostic.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Diagnostic.2025.8.19.2218\build\native\diagnostic.targets'))" />
+    <Error Condition="!Exists('..\packages\Diagnostic.2025.8.20.1612\build\native\diagnostic.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Diagnostic.2025.8.20.1612\build\native\diagnostic.props'))" />
+    <Error Condition="!Exists('..\packages\Diagnostic.2025.8.20.1612\build\native\diagnostic.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Diagnostic.2025.8.20.1612\build\native\diagnostic.targets'))" />
+    <Error Condition="!Exists('..\packages\IO.2025.8.20.1615\build\native\io.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\IO.2025.8.20.1615\build\native\io.props'))" />
+    <Error Condition="!Exists('..\packages\IO.2025.8.20.1615\build\native\io.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\IO.2025.8.20.1615\build\native\io.targets'))" />
   </Target>
 </Project>

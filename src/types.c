@@ -55,7 +55,7 @@ VirtualFunction virtual(const Type *type, const char *method)
   do {
     if (type && method)
     {
-      for (const VirtualEntry *ve = type->ve_start; ve != type->ve_stop; ve++) {
+      for (const VirtualEntry *ve = type->ve_start + 1; ve != type->ve_stop; ve++) {
         if (strcmp(ve->method, method)) continue;
 
         return ve->fptr;
