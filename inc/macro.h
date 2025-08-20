@@ -20,8 +20,8 @@
 #ifdef WIN
 #define DECLARE_SECTION(NAME, TYPE) \
   __pragma(section(STRINGIZE(NAME), read)); \
-  __declspec(allocate(STRINGIZE(NAME) "$0")) TYPE EXPAND2(__start_, NAME) = {}; \
-  __declspec(allocate(STRINGIZE(NAME) "$2")) TYPE EXPAND2(__stop_,   NAME) = {};
+  __declspec(allocate(STRINGIZE(NAME) "$0")) __declspec(selectany) TYPE EXPAND2(__start_, NAME) = {}; \
+  __declspec(allocate(STRINGIZE(NAME) "$2")) __declspec(selectany) TYPE EXPAND2(__stop_,   NAME) = {};
 
 #define USED_SECTION(NAME) __declspec(allocate(NAME "$1"))
 #define UNUSED_SECTION(NAME) USED_SECTION(NAME)

@@ -10,6 +10,8 @@
 #include <diagnostic.h>
 #include <macro.h>
 
+#include "oop.export.h"
+
 #define TYPEOF(TYPE) IFNULL(findtype(#TYPE), &_typeof_natives[sizeof(TYPE)])
 #define TYPE(T) &EXPAND2(_typeof_, T)
 
@@ -67,7 +69,7 @@ typedef struct _type {
 } Type;
 
 #ifdef WIN
-DECLARE_SECTION(reflection, __declspec(selectany) const Type)
+DECLARE_SECTION(reflection, const Type)
 #endif
 
 // Pointer
@@ -124,38 +126,38 @@ UNUSED_SECTION("reflection") static Type _typeof_natives[17] = {
   { .name = "octo",  .size = 16, .category = TYPES_DEFAULT },
 };
 
-const Type *findtype(const char *typename);
+OOP_EXPORT const Type *findtype(const char *typename);
 
 // A cast to allow for arbitrary use of parameters
-VirtualFunction      virtual     (const Type *type, const char *name);
-ConstVirtualFunction constvirtual(const Type *type, const char *name);
+OOP_EXPORT VirtualFunction      virtual     (const Type *type, const char *name);
+OOP_EXPORT ConstVirtualFunction constvirtual(const Type *type, const char *name);
 
 #ifdef MEMORY_WATCH
-PUBLIC void       *__talloc(const Type *type, const char *filename, int line);
+OOP_EXPORT void       *__talloc(const Type *type, const char *filename, int line);
 #endif
 
 // Typed malloc
-PUBLIC void       *talloc(const Type *type);
+OOP_EXPORT void       *talloc(const Type *type);
 
 // Typed free
-PUBLIC void        tfree(void *object);
+OOP_EXPORT void        tfree(void *object);
 
 // Gets the type of an object
-PUBLIC const Type *gettype(const void *object);
+OOP_EXPORT const Type *gettype(const void *object);
 
 // Get the base of the specified type
-PUBLIC const Type *getbase(const Type *type);
+OOP_EXPORT const Type *getbase(const Type *type);
 
 // Gets the typename of an object
-PUBLIC const char *typename(const void *object);
+OOP_EXPORT const char *typename(const void *object);
 
 // True if the type represents an object
-PUBLIC int         isobject(const Type *type);
+OOP_EXPORT int         isobject(const Type *type);
 
 // Compares the two types
-PUBLIC int         sametype(const Type *a, const Type *b);
+OOP_EXPORT int         sametype(const Type *a, const Type *b);
 
 // Search the inheritance tree for the type
-PUBLIC int         castable(const Type *base, const Type *derived);
+OOP_EXPORT int         castable(const Type *base, const Type *derived);
 
 #endif

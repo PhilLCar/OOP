@@ -19,8 +19,8 @@
 // The object declaration macro
 #define OBJECT(...) \
 typedef struct EXPAND2(_, TYPENAME) EXPAND(TYPENAME); \
-PUBLIC EXPAND(TYPENAME) *_(Construct)(__VA_ARGS__); \
-PUBLIC void _(Destruct)();
+LIBEXPORT EXPAND(TYPENAME) *_(Construct)(__VA_ARGS__); \
+LIBEXPORT void _(Destruct)();
 
 // Inherit from an object
 #define INHERIT(BASE_TYPENAME) \
@@ -70,13 +70,13 @@ UNUSED_SECTION("reflection") static Type EXPAND2(_typeof_, TYPENAME) = { \
 // Virtualization following this principle: https://stackoverflow.com/questions/3633896/append-items-to-an-array-with-a-macro-in-c
 
 // This macro allows to add the current method in the virtual table of the current object
-#define VIRTUAL(METHOD_NAME) ; static VirtualEntry EXPAND2(_ve_, __COUNTER__) USED_SECTION(STRINGIZE(EXPAND2(virtual_, TYPENAME))) = { \
+#define VIRTUAL(METHOD_NAME) ; USED_SECTION(STRINGIZE(EXPAND2(virtual_, TYPENAME))) static VirtualEntry EXPAND2(_ve_, __COUNTER__) = { \
 .method = #METHOD_NAME, \
 .fptr   = EXPAND3(TYPENAME, _, METHOD_NAME) \
 }
 
 // This macro allows to add any method to the virtual table of the current object
-#define FOREIGN_VIRTUAL(METHOD_NAME, METHOD) static VirtualEntry EXPAND2(_fe_, __COUNTER__) USED_SECTION(STRINGIZE(EXPAND2(virtual_, TYPENAME))) = { \
+#define FOREIGN_VIRTUAL(METHOD_NAME, METHOD) USED_SECTION(STRINGIZE(EXPAND2(virtual_, TYPENAME))) static VirtualEntry EXPAND2(_fe_, __COUNTER__) = { \
 .method = #METHOD_NAME, \
 .fptr   = METHOD \
 }

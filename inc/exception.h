@@ -14,11 +14,14 @@
 #include <diagnostic.h>
 #include <oop.h>
 
+#include "oop.export.h"
+
 #ifdef WIN
 #define SIGUSR1 SIGABRT
 #endif
 
-#define TYPENAME Exception
+#define LIBEXPORT OOP_EXPORT
+#define TYPENAME  Exception
 
 #define TRY _ex_setup(); if (!setjmp(_ex_jump)) {
 #define CATCH(EXCEPTION_TYPE) } else if (_exception && castable(TYPE(EXCEPTION_TYPE), gettype(_exception)) && (_ex_caught = 1)) {
@@ -34,31 +37,35 @@ OBJECT (const char *message, ...) INHERIT (char*)
   long        code;
 END_OBJECT("An unknown error occured!");
 
-PUBLIC extern Exception *_exception;
-PUBLIC extern Exception  _ex_plchold;
-PUBLIC extern jmp_buf    _ex_jump;
-PUBLIC extern int        _ex_caught;
+OOP_EXPORT extern Exception *_exception;
+OOP_EXPORT extern Exception  _ex_plchold;
+OOP_EXPORT extern jmp_buf    _ex_jump;
+OOP_EXPORT extern int        _ex_caught;
 
-PUBLIC void _ex_setup();
-PUBLIC void _ex_teardown();
+OOP_EXPORT void _ex_setup();
+OOP_EXPORT void _ex_teardown();
 
-PUBLIC void throw(Exception *exception);
+OOP_EXPORT void throw(Exception *exception);
 
 // Cast the object to the specified type
-PUBLIC void *cast(const Type *type, void *object);
+OOP_EXPORT void *cast(const Type *type, void *object);
 
 #undef TYPENAME
 #define TYPENAME SegmentationFaultException
 OBJECT () INHERIT (Exception)
 END_OBJECT();
 #undef TYPENAME
+
 #define TYPENAME ArithmeticException
 OBJECT () INHERIT (Exception)
 END_OBJECT();
 #undef TYPENAME
+
 #define TYPENAME MemoryAllocationException
 OBJECT () INHERIT (Exception)
 END_OBJECT();
 #undef TYPENAME
+
+#undef LIBEXPORT
 
 #endif
