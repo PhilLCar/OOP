@@ -1,4 +1,5 @@
 #include <exception.h>
+#include <inttypes.h>
 
 #ifdef WIN
 #pragma clang diagnostic ignored "-Wnull-dereference"
@@ -46,7 +47,7 @@ int main(void)
   const Type *test = gettype(db);
 
   if (test) {
-    printf("%s (%lld): %lld\n", test->name, test->size, test->category);
+    printf("%s (%"PRId64"): %"PRId64"\n", test->name, test->size, test->category);
     printf("%lf\n", *db);
   }
 
