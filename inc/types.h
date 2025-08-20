@@ -134,6 +134,7 @@ OOP_EXPORT ConstVirtualFunction constvirtual(const Type *type, const char *name)
 
 //#ifdef MEMORY_WATCH
 OOP_EXPORT void       *__talloc(const Type *type, const char *filename, int line);
+OOP_EXPORT void        __tfree(void *object);
 //#endif
 
 // Typed malloc

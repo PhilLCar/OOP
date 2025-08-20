@@ -95,6 +95,15 @@ UNUSED_SECTION("reflection") static Type EXPAND2(_typeof_, TYPENAME) = { \
 #define CALL(OBJECT, METHOD_NAME) virtual(gettype(OBJECT), #METHOD_NAME)(OBJECT __CALL_CONT__
 #define __CALL_CONT__(...) __VA_OPT__(,)__VA_ARGS__)
 
+#ifdef MEMORY_WATCH
+#define DELETE(OBJECT) \
+if (OBJECT) { \
+  const Type *type = gettype(OBJECT); \
+  if (type->destruct) type->destruct(OBJECT); \
+  __tfree(OBJECT); \
+  OBJECT = NULL; \
+}
+#else
 #define DELETE(OBJECT) \
 if (OBJECT) { \
   const Type *type = gettype(OBJECT); \
@@ -102,6 +111,7 @@ if (OBJECT) { \
   tfree(OBJECT); \
   OBJECT = NULL; \
 }
+#endif
 
 #define BASE_0 &this->base
 #define BASE_1 BASE_0.base
