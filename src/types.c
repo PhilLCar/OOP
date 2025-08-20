@@ -72,7 +72,7 @@ ConstVirtualFunction constvirtual(const Type *type, const char *method)
   return (ConstVirtualFunction)virtual(type, method);
 }
 
-#ifdef MEMORY_WATCH
+//#ifdef MEMORY_WATCH
 ////////////////////////////////////////////////////////////////////////////////
 void *__talloc(const Type *type, const char *filename, int line)
 {
@@ -82,7 +82,7 @@ void *__talloc(const Type *type, const char *filename, int line)
 
   return mem;
 }
-#endif
+//#endif
 
 ////////////////////////////////////////////////////////////////////////////////
 void *talloc(const Type *type)
