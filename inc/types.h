@@ -12,17 +12,17 @@
 
 #include "oop.export.h"
 
-#define TYPEOF(TYPE) IFNULL(findtype(#TYPE), &_typeof_natives[sizeof(TYPE)])
+#define TYPEOF(TYPE) IFNULL(findtype(#TYPE), (sizeof(TYPE) < sizeof(_typeof_natives) ? _typeof_natives + sizeof(TYPE) : NULL))
 #define TYPE(T) &EXPAND2(_typeof_, T)
 
 #define MAKETYPE(TYPE, CATEGORY) \
-__attribute((unused))\
+__attribute__((unused))\
 static void *TYPE##_Construct(void *mem, TYPE val) {\
   memcpy(mem, &val, sizeof(TYPE));\
   return mem;\
 }\
-UNUSED_SECTION("reflection") \
-static Type _typeof_##TYPE = { .name = #TYPE, .size = sizeof(TYPE), .category = CATEGORY};
+UNUSED_SECTION(reflection) \
+STATIC_EXPORT const Type _typeof_##TYPE = { .name = #TYPE, .size = sizeof(TYPE), .category = CATEGORY};
 
 #define MAKETYPE2(TYPE1, TYPE2, CATEGORY) \
 typedef TYPE1 TYPE2 TYPE1##TYPE2; \
@@ -68,9 +68,7 @@ typedef struct _type {
   const Types          category;
 } Type;
 
-#ifdef WIN
-DECLARE_SECTION(reflection, const Type)
-#endif
+DECLARE_SECTION(reflection, Type)
 
 // Pointer
 MAKETYPE(Pointer, TYPES_POINTER);
@@ -106,7 +104,7 @@ MAKETYPE3(unsigned, long, long, TYPES_UNSIGNED);
 #endif
 
 // Fallback types if normal ones are not found
-UNUSED_SECTION("reflection") static Type _typeof_natives[17] = {
+UNUSED_SECTION(reflection) STATIC_EXPORT const Type _typeof_natives[17] = {
   { .name = "void",  .size = 0,  .category = TYPES_DEFAULT },
   { .name = "byte",  .size = 1,  .category = TYPES_DEFAULT },
   { .name = "word",  .size = 2,  .category = TYPES_DEFAULT },

@@ -162,6 +162,7 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
+      <OptimizeReferences>false</OptimizeReferences>
     </Link>
     <PostBuildEvent>
       <Command>powershell ../deploy.ps1 $(Configuration)</Command>

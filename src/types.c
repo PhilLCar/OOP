@@ -3,7 +3,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 const Type* findtype(const char *typename)
 {
-    const Type *result = NULL;
+  const Type *result = NULL;
 
   if (typename) {
     char *_typename;
@@ -26,12 +26,12 @@ const Type* findtype(const char *typename)
     if (strchr(typename, '*')) {
       result = &_typeof_Pointer;
     } else {
-      const Type *start = ({ extern const Type __start_reflection; &__start_reflection; });
-      const Type *end   = ({ extern const Type __stop_reflection;  &__stop_reflection;  });
+      const Type *start = &__start_reflection + 1;
+      const Type *stop  = &__stop_reflection;
 
-      if (start && end)
+      if (start && stop)
       {
-        for (const Type *type = start; type != end; type++) {
+        for (const Type *type = start; type != stop; type++) {
           if (!strcmp(type->name, _typename)) {
             result = type;
             break;
@@ -55,7 +55,8 @@ VirtualFunction virtual(const Type *type, const char *method)
   do {
     if (type && method)
     {
-      for (const VirtualEntry *ve = type->ve_start + 1; ve != type->ve_stop; ve++) {
+      for (const VirtualEntry *ve = type->ve_start; ve != type->ve_stop; ve++) {
+        if (!ve->method) continue;
         if (strcmp(ve->method, method)) continue;
 
         return ve->fptr;
@@ -72,7 +73,6 @@ ConstVirtualFunction constvirtual(const Type *type, const char *method)
   return (ConstVirtualFunction)virtual(type, method);
 }
 
-//#ifdef MEMORY_WATCH
 ////////////////////////////////////////////////////////////////////////////////
 void *__talloc(const Type *type, const char *filename, int line)
 {
@@ -88,7 +88,6 @@ void __tfree(void *object)
 {
   __free((const Type**)object - 1);
 }
-//#endif
 
 ////////////////////////////////////////////////////////////////////////////////
 void *talloc(const Type *type)

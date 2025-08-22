@@ -11,6 +11,9 @@
 #define EXPAND3(A, B, C) __EXPAND3_CONT__(A, B, C)
 #define __EXPAND3_CONT__(A, B, C) A ## B ## C
 
+#define EXPAND4(A, B, C, D) __EXPAND4_CONT__(A, B, C, D)
+#define __EXPAND4_CONT__(A, B, C, D) A ## B ## C ## D
+
 #define STRINGIZE(A) __STRINGIZE_CONT__(A)
 #define __STRINGIZE_CONT__(A) #A
 
@@ -18,17 +21,24 @@
 
 
 #ifdef WIN
+
+#define STATIC_EXPORT __declspec(dllexport) __declspec(selectany)
+#define USED_SECTION(NAME)   _declspec(allocate(STRINGIZE(NAME) "$1"))
+#define UNUSED_SECTION(NAME) USED_SECTION(NAME)
 #define DECLARE_SECTION(NAME, TYPE) \
   __pragma(section(STRINGIZE(NAME), read)); \
-  __declspec(allocate(STRINGIZE(NAME) "$0")) __declspec(selectany) TYPE EXPAND2(__start_, NAME) = {}; \
-  __declspec(allocate(STRINGIZE(NAME) "$2")) __declspec(selectany) TYPE EXPAND2(__stop_,   NAME) = {};
+  __declspec(allocate(STRINGIZE(NAME) "$0")) STATIC_EXPORT const TYPE EXPAND2(__start_, NAME) = {}; \
+  __declspec(allocate(STRINGIZE(NAME) "$2")) STATIC_EXPORT const TYPE EXPAND2(__stop_,  NAME) = {}; 
 
-#define USED_SECTION(NAME) __declspec(allocate(NAME "$1"))
-#define UNUSED_SECTION(NAME) USED_SECTION(NAME)
 #else
-#define DECLARE_SECTION(NAME, TYPE)
-#define USED_SECTION(NAME)   __attribute__((used,   section(NAME)))
-#define UNUSED_SECTION(NAME) __attribute__((unused, section(NAME)))
+
+#define STATIC_EXPORT static
+#define USED_SECTION(NAME)   __attribute__(used, section(STRINGIZE(NAME)))
+#define UNUSED_SECTION(NAME) __attribute__((unused, section(STRINGIZE(NAME))))
+#define DECLARE_SECTION(NAME, TYPE) \
+extern TYPE EXPAND2(__start_, NAME), EXPAND2(__stop_, NAME); \
+SECTION(NAME) STATIC_EXPORT const TYPE EXPAND2(_init_, NAME) = {};
+
 #endif
 
 #endif

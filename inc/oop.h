@@ -16,15 +16,19 @@
 #undef DELETE
 #endif
 
+#define __VIRTUAL_TABLE_NAME   EXPAND3(virtual, _, TYPENAME)
+#define __VIRTUAL_TABLE_START &EXPAND2(__start_virtual_, TYPENAME) + 1
+#define __VIRTUAL_TABLE_STOP  &EXPAND2(__stop_virtual_, TYPENAME)
+
 // The object declaration macro
 #define OBJECT(...) \
 typedef struct EXPAND2(_, TYPENAME) EXPAND(TYPENAME); \
-LIBEXPORT EXPAND(TYPENAME) *_(Construct)(__VA_ARGS__); \
-LIBEXPORT void _(Destruct)();
+LIB_EXPORT EXPAND(TYPENAME) *_(Construct)(__VA_ARGS__); \
+LIB_EXPORT void _(Destruct)();
 
 // Inherit from an object
 #define INHERIT(BASE_TYPENAME) \
-static const char *EXPAND2(_baseof_, TYPENAME) = #BASE_TYPENAME; \
+STATIC_EXPORT const char *EXPAND2(_baseof_, TYPENAME) = #BASE_TYPENAME; \
 struct EXPAND2(_, TYPENAME) { \
 BASE_TYPENAME base;
 
@@ -33,26 +37,24 @@ BASE_TYPENAME base;
 #undef __
 
 #define NOBASE \
-static const char *EXPAND2(_baseof_, TYPENAME) = NULL; \
+STATIC_EXPORT const char *EXPAND2(_baseof_, TYPENAME) = NULL; \
 struct EXPAND2(_, TYPENAME) {
 
 // This is to standardize inheriting and non-inheriting objects' definitions
 // (the brackets are hidden in the macros)
 #define END_OBJECT(...) }; \
-DECLARE_SECTION(EXPAND2(virtual_, TYPENAME), VirtualEntry) \
+DECLARE_SECTION(__VIRTUAL_TABLE_NAME, VirtualEntry) \
 static void *_(Default)() { \
   return EXPAND2(TYPENAME, _Construct)(this __VA_OPT__(,) __VA_ARGS__); \
 }; \
-static VirtualEntry USED_SECTION(STRINGIZE(EXPAND2(virtual_, TYPENAME))) EXPAND2(_ve_, TYPENAME) = { .method = "" }; \
-extern VirtualEntry EXPAND2(__start_virtual_, TYPENAME), EXPAND2(__stop_virtual_, TYPENAME); \
-UNUSED_SECTION("reflection") static Type EXPAND2(_typeof_, TYPENAME) = { \
+UNUSED_SECTION(reflection) static const Type EXPAND2(_typeof_, TYPENAME) = { \
   .name      = STRINGIZE(TYPENAME), \
   .size      = sizeof(EXPAND(TYPENAME)), \
   .basename  = &EXPAND2(_baseof_, TYPENAME), \
   .construct = (void*)EXPAND2(TYPENAME, _Default), \
   .destruct  = (void*)EXPAND2(TYPENAME, _Destruct), \
-  .ve_start  = &EXPAND2(__start_virtual_, TYPENAME) + 1, \
-  .ve_stop   = &EXPAND2(__stop_virtual_, TYPENAME), \
+  .ve_start  = __VIRTUAL_TABLE_START, \
+  .ve_stop   = __VIRTUAL_TABLE_STOP, \
   .category  = TYPES_OBJECT\
 }
 
@@ -70,13 +72,13 @@ UNUSED_SECTION("reflection") static Type EXPAND2(_typeof_, TYPENAME) = { \
 // Virtualization following this principle: https://stackoverflow.com/questions/3633896/append-items-to-an-array-with-a-macro-in-c
 
 // This macro allows to add the current method in the virtual table of the current object
-#define VIRTUAL(METHOD_NAME) ; USED_SECTION(STRINGIZE(EXPAND2(virtual_, TYPENAME))) static VirtualEntry EXPAND2(_ve_, __COUNTER__) = { \
+#define VIRTUAL(METHOD_NAME) ; USED_SECTION(__VIRTUAL_TABLE_NAME) STATIC_EXPORT const VirtualEntry EXPAND2(_ve_, __COUNTER__) = { \
 .method = #METHOD_NAME, \
 .fptr   = EXPAND3(TYPENAME, _, METHOD_NAME) \
 }
 
 // This macro allows to add any method to the virtual table of the current object
-#define FOREIGN_VIRTUAL(METHOD_NAME, METHOD) USED_SECTION(STRINGIZE(EXPAND2(virtual_, TYPENAME))) static VirtualEntry EXPAND2(_fe_, __COUNTER__) = { \
+#define FOREIGN_VIRTUAL(METHOD_NAME, METHOD) USED_SECTION(__VIRTUAL_TABLE_NAME) STATIC_EXPORT const VirtualEntry EXPAND2(_fe_, __COUNTER__) = { \
 .method = #METHOD_NAME, \
 .fptr   = METHOD \
 }

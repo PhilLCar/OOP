@@ -20,7 +20,7 @@
 #define SIGUSR1 SIGABRT
 #endif
 
-#define LIBEXPORT OOP_EXPORT
+#define LIB_EXPORT OOP_EXPORT
 #define TYPENAME  Exception
 
 #define TRY _ex_setup(); if (!setjmp(_ex_jump)) {
@@ -66,6 +66,6 @@ OBJECT () INHERIT (Exception)
 END_OBJECT();
 #undef TYPENAME
 
-#undef LIBEXPORT
+#undef LIB_EXPORT
 
 #endif
