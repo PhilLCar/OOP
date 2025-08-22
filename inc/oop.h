@@ -32,8 +32,8 @@ STATIC_EXPORT const char *EXPAND2(_baseof_, TYPENAME) = #BASE_TYPENAME; \
 struct EXPAND2(_, TYPENAME) { \
 BASE_TYPENAME base;
 
-// For the linter only
 #define __ }
+// For the linter only
 #undef __
 
 #define NOBASE \

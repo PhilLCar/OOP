@@ -67,13 +67,25 @@ void _ex_default()
   signal(SIGFPE,  _ex_default_handler);
 }
 
-void _ex_teardown()
+void _ex_teardown(int memory_watch)
 {
   _ex_default();
   _handler_set = 0;
 
   if (_ex_caught) {
-    DELETE (_exception);
+    const Type *type = gettype(_exception);
+    
+    if (type && type->destruct) {
+      type->destruct(_exception);
+    }
+
+    if (memory_watch) {
+      __tfree(_exception);
+    } else {
+      tfree(_exception);
+    }
+
+    _exception = NULL;
     _ex_caught = 0;
   }
 

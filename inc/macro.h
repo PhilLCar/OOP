@@ -33,11 +33,11 @@
 #else
 
 #define STATIC_EXPORT static
-#define USED_SECTION(NAME)   __attribute__(used, section(STRINGIZE(NAME)))
+#define USED_SECTION(NAME)   __attribute__((used, section(STRINGIZE(NAME))))
 #define UNUSED_SECTION(NAME) __attribute__((unused, section(STRINGIZE(NAME))))
 #define DECLARE_SECTION(NAME, TYPE) \
-extern TYPE EXPAND2(__start_, NAME), EXPAND2(__stop_, NAME); \
-SECTION(NAME) STATIC_EXPORT const TYPE EXPAND2(_init_, NAME) = {};
+extern const TYPE EXPAND2(__start_, NAME), EXPAND2(__stop_, NAME); \
+USED_SECTION(NAME) STATIC_EXPORT const TYPE EXPAND2(_init_, NAME) = {};
 
 #endif
 

@@ -25,7 +25,14 @@
 
 #define TRY _ex_setup(); if (!setjmp(_ex_jump)) {
 #define CATCH(EXCEPTION_TYPE) } else if (_exception && castable(TYPE(EXCEPTION_TYPE), gettype(_exception)) && (_ex_caught = 1)) {
-#define END_TRY } _ex_teardown();
+#ifdef MEMORY_WATCH
+#define END_TRY } _ex_teardown(1);
+#else
+#define __ {
+// For the linter only
+#undef __
+#define END_TRY } _ex_teardown(0);
+#endif
 
 #define THROW(EXCEPTION) { _exception = (Exception*)EXCEPTION; _exception->filename = __FILE__; _exception->line = __LINE__; throw(_exception); }
 

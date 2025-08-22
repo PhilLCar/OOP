@@ -13,7 +13,7 @@ PROJECT_ROOTS =
 LIBRARIES = 
 
 # Additionnal flags for the compiler
-FLAGS = -DMEMORY_WATCH
+FLAGS =
 
 # Include the template
 include $(CUT_HOME)CUT/res/library.mk
