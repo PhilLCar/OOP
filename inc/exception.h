@@ -50,7 +50,7 @@ OOP_EXPORT extern jmp_buf    _ex_jump;
 OOP_EXPORT extern int        _ex_caught;
 
 OOP_EXPORT void _ex_setup();
-OOP_EXPORT void _ex_teardown();
+OOP_EXPORT void _ex_teardown(int memory_watch);
 
 OOP_EXPORT void throw(Exception *exception);
 

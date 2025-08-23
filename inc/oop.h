@@ -45,9 +45,9 @@ struct EXPAND2(_, TYPENAME) {
 #define END_OBJECT(...) }; \
 DECLARE_SECTION(__VIRTUAL_TABLE_NAME, VirtualEntry) \
 static void *_(Default)() { \
-  return EXPAND2(TYPENAME, _Construct)(this __VA_OPT__(,) __VA_ARGS__); \
+  return EXPAND2(TYPENAME, _Construct)(this , ## __VA_ARGS__); \
 }; \
-UNUSED_SECTION(reflection) static const Type EXPAND2(_typeof_, TYPENAME) = { \
+UNUSED_SECTION(reflection) STATIC_EXPORT const Type EXPAND2(_typeof_, TYPENAME) = { \
   .name      = STRINGIZE(TYPENAME), \
   .size      = sizeof(EXPAND(TYPENAME)), \
   .basename  = &EXPAND2(_baseof_, TYPENAME), \
@@ -60,11 +60,11 @@ UNUSED_SECTION(reflection) static const Type EXPAND2(_typeof_, TYPENAME) = { \
 
 // Underscore to imply member method
 #define _(METHOD_NAME) EXPAND3(TYPENAME, _, METHOD_NAME)(EXPAND(TYPENAME) *this __CONT__
-#define __CONT__(...) __VA_OPT__(,)__VA_ARGS__)
+#define __CONT__(...) , ## __VA_ARGS__)
 
 // Underscore to imply member method
 #define CONST(METHOD_NAME) EXPAND3(TYPENAME, _, METHOD_NAME)(const EXPAND(TYPENAME) *this __CONST_CONT__
-#define __CONST_CONT__(...) __VA_OPT__(,)__VA_ARGS__)
+#define __CONST_CONT__(...) , ## __VA_ARGS__)
 
 // Replace underscore with static for static method
 #define STATIC(FUNCTION_NAME) EXPAND3(TYPENAME, _, FUNCTION_NAME)
@@ -86,16 +86,16 @@ UNUSED_SECTION(reflection) static const Type EXPAND2(_typeof_, TYPENAME) = { \
 #ifdef MEMORY_WATCH
 // Creates a new instance of the object
 #define NEW(TYPENAME) TYPENAME ## _Construct((TYPENAME*)__talloc(&EXPAND2(_typeof_, TYPENAME), __FILE__, __LINE__) __NEW_CONT__
-#define __NEW_CONT__(...) __VA_OPT__(,)__VA_ARGS__)
+#define __NEW_CONT__(...) , ## __VA_ARGS__)
 #else
 // Creates a new instance of the object
 #define NEW(TYPENAME) TYPENAME ## _Construct((TYPENAME*)talloc(&EXPAND2(_typeof_, TYPENAME)) __NEW_CONT__
-#define __NEW_CONT__(...) __VA_OPT__(,)__VA_ARGS__)
+#define __NEW_CONT__(...) , ## __VA_ARGS__)
 #endif
  
 // Call a virtual method on the object
 #define CALL(OBJECT, METHOD_NAME) virtual(gettype(OBJECT), #METHOD_NAME)(OBJECT __CALL_CONT__
-#define __CALL_CONT__(...) __VA_OPT__(,)__VA_ARGS__)
+#define __CALL_CONT__(...) , ## __VA_ARGS__)
 
 #ifdef MEMORY_WATCH
 #define DELETE(OBJECT) \
