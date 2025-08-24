@@ -22,7 +22,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\tst\*" />
+    <ClCompile Include="..\..\tst\*.c" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\OOP\OOP.vcxproj">

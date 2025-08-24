@@ -91,7 +91,7 @@ UNUSED_SECTION(reflection) STATIC_EXPORT const Type EXPAND2(_typeof_, TYPENAME) 
 #else
 // Creates a new instance of the object
 #define NEW(TYPENAME) TYPENAME ## _Construct((TYPENAME*)talloc(&EXPAND2(_typeof_, TYPENAME)) __NEW_CONT__
-#define __NEW_CONT__(...) __VA_OPT__(,) __VA_ARGS__)
+#define __NEW_CONT__(...) __VA_COMMA__(__VA_ARGS__))
 #endif
  
 // Call a virtual method on the object
